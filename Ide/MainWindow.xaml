@@ -5,8 +5,79 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Ide"
         mc:Ignorable="d"
-        Title="Ide IDE" Height="700" Width="1200">
+        Title="Ide IDE" Height="700" Width="1200" MinWidth="600" MinHeight="400">
+    <!--@todo Use some other layout control next to Grid (requirement)-->
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="160" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="auto" />
+        </Grid.ColumnDefinitions>
 
+        <!--Menu-->
+        <Menu Grid.ColumnSpan="2" VerticalAlignment="Top">
+            <MenuItem Header="File">
+                <MenuItem Header="Create Project..."/>
+                <Separator/>
+                <MenuItem Header="Exit"/>
+            </MenuItem>
+
+            <MenuItem Header="Edit">
+                <MenuItem Header="Undo"/>
+                <MenuItem Header="Redo"/>
+            </MenuItem>
+
+            <MenuItem Header="View">
+                <MenuItem Header="Word Wrap" IsCheckable="True"/>
+            </MenuItem>
+
+            <MenuItem Header="Tools">
+                <MenuItem Header="Build"/>
+            </MenuItem>
+        </Menu>
+
+        <!--Tool Bar-->
+        <ToolBar Grid.Row="1" Grid.ColumnSpan="2">
+            <Button Content="Create File"/>
+            <Button Content="Delete File"/>
+        </ToolBar>
+
+        <!--Folder Structure View-->
+        <TreeView Grid.Row="2" BorderThickness="0,0,1,1">
+            <TreeViewItem Header="Project &quot;Ide&quot;">
+                <TreeViewItem Header="Resources">
+                    <TreeViewItem Header="picture_folder.png"/>
+                    <TreeViewItem Header="picture_save.png"/>
+                </TreeViewItem>
+                <TreeViewItem Header="App.config"/>
+                <TreeViewItem Header="App.xaml"/>
+                <TreeViewItem Header="MainWindow.xaml">
+                    <TreeViewItem Header="MainWindow.xaml.cs"/>
+                </TreeViewItem>
+            </TreeViewItem>
+        </TreeView>
+
+
+        <!--Hierarchy View-->
+        <ListView Grid.Row="3" BorderThickness="0,0,1,0">
+            <ListViewItem Content="Class Ide.Main"/>
+            <ListViewItem Content="Class Ide.Keybinds"/>
+            <ListViewItem Content="Class Ide.Settings"/>
+        </ListView>
+
+        <!--Text Editor-->
+        <TextBox Grid.Column="1" Grid.Row="2" Grid.RowSpan="2" BorderThickness="0" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Auto"/>
+
+        <!--Status Bar-->
+        <StatusBar Grid.Row="4" Grid.ColumnSpan="2">
+            <StatusBarItem Content="Status:"/>
+        </StatusBar>
     </Grid>
 </Window>
