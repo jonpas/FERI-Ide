@@ -36,6 +36,7 @@
 
             <MenuItem Header="View">
                 <MenuItem Header="Word Wrap" IsCheckable="True"/>
+                <!--@todo implement functionality-->
             </MenuItem>
 
             <MenuItem Header="Tools">
@@ -45,8 +46,12 @@
 
         <!--Tool Bar-->
         <ToolBar Grid.Row="1" Grid.ColumnSpan="2">
+            <!--@todo Use add Visual Studio Image Library icons-->
             <Button Content="Create File"/>
             <Button Content="Delete File"/>
+            <Separator/>
+            <Button Content="Undo"/>
+            <Button Content="Redo"/>
         </ToolBar>
 
         <!--Folder Structure View-->
@@ -64,7 +69,6 @@
             </TreeViewItem>
         </TreeView>
 
-
         <!--Hierarchy View-->
         <ListView Grid.Row="3" BorderThickness="0,0,1,0">
             <ListViewItem Content="Class Ide.Main"/>
@@ -73,7 +77,7 @@
         </ListView>
 
         <!--Text Editor-->
-        <TextBox Grid.Column="1" Grid.Row="2" Grid.RowSpan="2" BorderThickness="0" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Auto"/>
+        <TextBox Grid.Column="1" Grid.Row="2" Grid.RowSpan="2" BorderThickness="0" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Auto" TextWrapping="Wrap" AcceptsReturn="True" AcceptsTab="True"/>
 
         <!--Status Bar-->
         <StatusBar Grid.Row="4" Grid.ColumnSpan="2">
