@@ -16,7 +16,7 @@
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="160" />
+            <ColumnDefinition Width="200" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="auto" />
         </Grid.ColumnDefinitions>
@@ -24,9 +24,10 @@
         <!--Menu-->
         <Menu Grid.ColumnSpan="2" VerticalAlignment="Top">
             <MenuItem Header="File">
-                <MenuItem Header="Create Project..."/>
+                <MenuItem Header="Create Project..." Click="CreateProject"/>
+                <MenuItem Header="Close Project" Click="CloseProject"/>
                 <Separator/>
-                <MenuItem Header="Exit"/>
+                <MenuItem Header="Exit" Click="Exit"/>
             </MenuItem>
 
             <MenuItem Header="Edit">
@@ -47,34 +48,18 @@
         <!--Tool Bar-->
         <ToolBar Grid.Row="1" Grid.ColumnSpan="2">
             <!--@todo Use add Visual Studio Image Library icons-->
-            <Button Content="Create File"/>
-            <Button Content="Delete File"/>
+            <Button Content="Create File" Click="CreateFile"/>
+            <Button Name="DeleteFileButton" Content="Delete File" IsEnabled="False" Click="DeleteFile"/>
             <Separator/>
             <Button Content="Undo"/>
             <Button Content="Redo"/>
         </ToolBar>
 
         <!--Folder Structure View-->
-        <TreeView Grid.Row="2" BorderThickness="0,0,1,1">
-            <TreeViewItem Header="Project &quot;Ide&quot;">
-                <TreeViewItem Header="Resources">
-                    <TreeViewItem Header="picture_folder.png"/>
-                    <TreeViewItem Header="picture_save.png"/>
-                </TreeViewItem>
-                <TreeViewItem Header="App.config"/>
-                <TreeViewItem Header="App.xaml"/>
-                <TreeViewItem Header="MainWindow.xaml">
-                    <TreeViewItem Header="MainWindow.xaml.cs"/>
-                </TreeViewItem>
-            </TreeViewItem>
-        </TreeView>
+        <TreeView Name="ProjectTree" Grid.Row="2" BorderThickness="0,0,1,1" SelectedItemChanged="ListClassMethods"/>
 
         <!--Hierarchy View-->
-        <ListView Grid.Row="3" BorderThickness="0,0,1,0">
-            <ListViewItem Content="Class Ide.Main"/>
-            <ListViewItem Content="Class Ide.Keybinds"/>
-            <ListViewItem Content="Class Ide.Settings"/>
-        </ListView>
+        <ListView Name="MethodList" Grid.Row="3" BorderThickness="0,0,1,0"/>
 
         <!--Text Editor-->
         <TextBox Grid.Column="1" Grid.Row="2" Grid.RowSpan="2" BorderThickness="0" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Auto" TextWrapping="Wrap" AcceptsReturn="True" AcceptsTab="True"/>

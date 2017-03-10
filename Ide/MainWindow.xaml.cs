@@ -21,5 +21,96 @@ namespace Ide {
         public MainWindow() {
             InitializeComponent();
         }
+
+        private void Exit(object sender, RoutedEventArgs e) {
+            Application.Current.Shutdown();
+        }
+
+        private void CreateProject(object sender, RoutedEventArgs e) {
+            //@todo not use dummy hardcoded content
+            TreeViewItem itemProject = new TreeViewItem();
+            itemProject.Header = "Project \"Ide\"";
+            ProjectTree.Items.Add(itemProject);
+            itemProject.ExpandSubtree();
+
+            TreeViewItem item = new TreeViewItem();
+            item.Header = "Resources";
+            itemProject.Items.Add(item);
+            TreeViewItem itemSub = new TreeViewItem();
+            itemSub.Header = "picture_folder.png";
+            item.Items.Add(itemSub);
+            itemSub = new TreeViewItem();
+            itemSub.Header = "picture_save.png";
+            item.Items.Add(itemSub);
+
+            item = new TreeViewItem();
+            item.Header = "App.config";
+            itemProject.Items.Add(item);
+            item = new TreeViewItem();
+            item.Header = "App.xaml";
+            itemProject.Items.Add(item);
+
+            item = new TreeViewItem();
+            item.Header = "MainWindow.xaml";
+            itemProject.Items.Add(item);
+            itemSub = new TreeViewItem();
+            itemSub.Header = "MainWindow.xaml.cs";
+            item.Items.Add(itemSub);
+
+        }
+
+        private void CloseProject(object sender, RoutedEventArgs e) {
+            //@todo check if anything is not saved
+            MessageBoxResult saveResult = MessageBox.Show("Do you want to save your work before closing the project?", "Close Project Save", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+
+            // Clean up tree view if Cancel was not selected
+            if (saveResult != MessageBoxResult.Cancel) {
+                ProjectTree.Items.Clear();
+            }
+        }
+
+        private void ListClassMethods(object sender, RoutedPropertyChangedEventArgs<object> e) {
+            // Remove previous items
+            MethodList.Items.Clear();
+
+            TreeViewItem selectedItem = e.NewValue as TreeViewItem;
+            if (selectedItem == null) {
+                // Disable delete file button
+                DeleteFileButton.IsEnabled = false;
+            }
+            else {
+                // Enable delete file button
+                DeleteFileButton.IsEnabled = true;
+
+                // Add selected class methods to method list
+                ListViewItem item;
+                if (selectedItem.Header.ToString().Contains(".cs")) {
+                    //@todo not use dummy hardcoded content
+                    item = new ListViewItem();
+                    item.Content = "void CreateProject()";
+                    MethodList.Items.Add(item);
+
+                    item = new ListViewItem();
+                    item.Content = "void CloseProject()";
+                    MethodList.Items.Add(item);
+
+                    item = new ListViewItem();
+                    item.Content = "void ListClassMethods()";
+                    MethodList.Items.Add(item);
+                }
+            }
+        }
+
+        private void CreateFile(object sender, RoutedEventArgs e) {
+            TreeViewItem item = new TreeViewItem();
+            item.Header = "new_file.txt";
+            ProjectTree.Items.Add(item);
+        }
+
+        private void DeleteFile(object sender, RoutedEventArgs e) {
+            TreeViewItem item = (TreeViewItem)ProjectTree.SelectedItem;
+            ProjectTree.Items.Remove(ProjectTree.SelectedItem);
+            //@todo ability to remove sub-items
+        }
     }
 }
