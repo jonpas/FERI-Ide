@@ -27,6 +27,8 @@
                 <MenuItem Header="Create Project..." Click="CreateProject"/>
                 <MenuItem Header="Close Project" Click="CloseProject"/>
                 <Separator/>
+                <MenuItem Header="Settings" Click="OpenSettings"/>
+                <Separator/>
                 <MenuItem Header="Exit" Click="Exit"/>
             </MenuItem>
 
@@ -55,11 +57,13 @@
             <Button Content="Redo"/>
         </ToolBar>
 
-        <!--Folder Structure View-->
-        <TreeView Name="ProjectTree" Grid.Row="2" BorderThickness="0,0,1,1" SelectedItemChanged="ListClassMethods"/>
+        <StackPanel Grid.Row="2" >
+            <!--Folder Structure View-->
+            <TreeView Name="ProjectTree" BorderThickness="0,0,1,1" SelectedItemChanged="ListClassMethods"/>
 
-        <!--Hierarchy View-->
-        <ListView Name="MethodList" Grid.Row="3" BorderThickness="0,0,1,0"/>
+            <!--Hierarchy View-->
+            <ListView Name="MethodList" BorderThickness="0,0,1,0"/>
+        </StackPanel>
 
         <!--Text Editor-->
         <TextBox Grid.Column="1" Grid.Row="2" Grid.RowSpan="2" BorderThickness="0" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Auto" TextWrapping="Wrap" AcceptsReturn="True" AcceptsTab="True"/>

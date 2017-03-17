@@ -27,7 +27,7 @@ namespace Ide {
         }
 
         private void CreateProject(object sender, RoutedEventArgs e) {
-            //@todo not use dummy hardcoded content
+            //TODO: not use dummy hardcoded content
             TreeViewItem itemProject = new TreeViewItem();
             itemProject.Header = "Project \"Ide\"";
             ProjectTree.Items.Add(itemProject);
@@ -60,7 +60,7 @@ namespace Ide {
         }
 
         private void CloseProject(object sender, RoutedEventArgs e) {
-            //@todo check if anything is not saved
+            //TODO: check if anything is not saved
             MessageBoxResult saveResult = MessageBox.Show("Do you want to save your work before closing the project?", "Close Project Save", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
 
             // Clean up tree view if Cancel was not selected
@@ -85,7 +85,7 @@ namespace Ide {
                 // Add selected class methods to method list
                 ListViewItem item;
                 if (selectedItem.Header.ToString().Contains(".cs")) {
-                    //@todo not use dummy hardcoded content
+                    //TODO: not use dummy hardcoded content
                     item = new ListViewItem();
                     item.Content = "void CreateProject()";
                     MethodList.Items.Add(item);
@@ -110,7 +110,14 @@ namespace Ide {
         private void DeleteFile(object sender, RoutedEventArgs e) {
             TreeViewItem item = (TreeViewItem)ProjectTree.SelectedItem;
             ProjectTree.Items.Remove(ProjectTree.SelectedItem);
-            //@todo ability to remove sub-items
+            //TODO: ability to remove sub-items
+        }
+
+        private void OpenSettings(object sender, RoutedEventArgs e) {
+            Settings settings = new Settings();
+            if (settings.ShowDialog() == true) {
+                MessageBox.Show("Settings", "OK", MessageBoxButton.OK);
+            }
         }
     }
 }
