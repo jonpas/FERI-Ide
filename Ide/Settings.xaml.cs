@@ -12,16 +12,20 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Ide {
+namespace Ide
+{
     /// <summary>
     /// Interaction logic for Settings.xaml
     /// </summary>
-    public partial class Settings : Window {
-        public Settings() {
+    public partial class Settings : Window
+    {
+        public Settings()
+        {
             InitializeComponent();
         }
 
-        private void ConfirmSettings(object sender, RoutedEventArgs e) {
+        private void ConfirmSettings(object sender, RoutedEventArgs e)
+        {
             //TODO: save settings
             this.DialogResult = true;
         }

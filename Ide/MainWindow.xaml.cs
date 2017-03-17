@@ -13,20 +13,25 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Ide {
+namespace Ide
+{
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window {
-        public MainWindow() {
+    public partial class MainWindow : Window
+    {
+        public MainWindow()
+        {
             InitializeComponent();
         }
 
-        private void Exit(object sender, RoutedEventArgs e) {
+        private void Exit(object sender, RoutedEventArgs e)
+        {
             Application.Current.Shutdown();
         }
 
-        private void CreateProject(object sender, RoutedEventArgs e) {
+        private void CreateProject(object sender, RoutedEventArgs e)
+        {
             //TODO: not use dummy hardcoded content
             TreeViewItem itemProject = new TreeViewItem();
             itemProject.Header = "Project \"Ide\"";
@@ -59,32 +64,38 @@ namespace Ide {
 
         }
 
-        private void CloseProject(object sender, RoutedEventArgs e) {
+        private void CloseProject(object sender, RoutedEventArgs e)
+        {
             //TODO: check if anything is not saved
             MessageBoxResult saveResult = MessageBox.Show("Do you want to save your work before closing the project?", "Close Project Save", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
 
             // Clean up tree view if Cancel was not selected
-            if (saveResult != MessageBoxResult.Cancel) {
+            if (saveResult != MessageBoxResult.Cancel)
+            {
                 ProjectTree.Items.Clear();
             }
         }
 
-        private void ListClassMethods(object sender, RoutedPropertyChangedEventArgs<object> e) {
+        private void ListClassMethods(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
             // Remove previous items
             MethodList.Items.Clear();
 
             TreeViewItem selectedItem = e.NewValue as TreeViewItem;
-            if (selectedItem == null) {
+            if (selectedItem == null)
+            {
                 // Disable delete file button
                 DeleteFileButton.IsEnabled = false;
             }
-            else {
+            else
+            {
                 // Enable delete file button
                 DeleteFileButton.IsEnabled = true;
 
                 // Add selected class methods to method list
                 ListViewItem item;
-                if (selectedItem.Header.ToString().Contains(".cs")) {
+                if (selectedItem.Header.ToString().Contains(".cs"))
+                {
                     //TODO: not use dummy hardcoded content
                     item = new ListViewItem();
                     item.Content = "void CreateProject()";
@@ -101,21 +112,25 @@ namespace Ide {
             }
         }
 
-        private void CreateFile(object sender, RoutedEventArgs e) {
+        private void CreateFile(object sender, RoutedEventArgs e)
+        {
             TreeViewItem item = new TreeViewItem();
             item.Header = "new_file.txt";
             ProjectTree.Items.Add(item);
         }
 
-        private void DeleteFile(object sender, RoutedEventArgs e) {
+        private void DeleteFile(object sender, RoutedEventArgs e)
+        {
             TreeViewItem item = (TreeViewItem)ProjectTree.SelectedItem;
             ProjectTree.Items.Remove(ProjectTree.SelectedItem);
             //TODO: ability to remove sub-items
         }
 
-        private void OpenSettings(object sender, RoutedEventArgs e) {
+        private void OpenSettings(object sender, RoutedEventArgs e)
+        {
             Settings settings = new Settings();
-            if (settings.ShowDialog() == true) {
+            if (settings.ShowDialog() == true)
+            {
                 MessageBox.Show("Settings", "OK", MessageBoxButton.OK);
             }
         }

@@ -57,13 +57,11 @@
             <Button Content="Redo"/>
         </ToolBar>
 
-        <StackPanel Grid.Row="2" >
-            <!--Folder Structure View-->
-            <TreeView Name="ProjectTree" BorderThickness="0,0,1,1" SelectedItemChanged="ListClassMethods"/>
+        <!--Folder Structure View-->
+        <TreeView Name="ProjectTree" Grid.Row="2" BorderThickness="0,0,1,1" SelectedItemChanged="ListClassMethods"/>
 
-            <!--Hierarchy View-->
-            <ListView Name="MethodList" BorderThickness="0,0,1,0"/>
-        </StackPanel>
+        <!--Hierarchy View-->
+        <ListView Name="MethodList" Grid.Row="3" BorderThickness="0,0,1,0"/>
 
         <!--Text Editor-->
         <TextBox Grid.Column="1" Grid.Row="2" Grid.RowSpan="2" BorderThickness="0" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Auto" TextWrapping="Wrap" AcceptsReturn="True" AcceptsTab="True"/>
