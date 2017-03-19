@@ -6,68 +6,75 @@
         xmlns:local="clr-namespace:Ide"
         mc:Ignorable="d"
         Title="Ide IDE" Height="700" Width="1200" MinWidth="600" MinHeight="400">
-    <!--@todo Use some other layout control next to Grid (requirement)-->
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200" />
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="200"/>
             <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
 
         <!--Menu-->
-        <Menu Grid.ColumnSpan="2" VerticalAlignment="Top">
-            <MenuItem Header="File">
-                <MenuItem Header="Create Project..." Click="CreateProject"/>
-                <MenuItem Header="Close Project" Click="CloseProject"/>
+        <StackPanel Grid.ColumnSpan="3">
+            <Menu>
+                <MenuItem Header="File">
+                    <MenuItem Header="Create Project..." Click="CreateProject"/>
+                    <MenuItem Header="Close Project" Click="CloseProject"/>
+                    <Separator/>
+                    <MenuItem Header="Exit" Click="Exit"/>
+                </MenuItem>
+
+                <MenuItem Header="Edit">
+                    <MenuItem Header="Undo"/>
+                    <MenuItem Header="Redo"/>
+                </MenuItem>
+
+                <MenuItem Header="View">
+                    <MenuItem Header="Word Wrap" IsCheckable="True"/>
+                    <!--@todo implement functionality-->
+                </MenuItem>
+
+                <MenuItem Header="Tools">
+                    <MenuItem Header="Build"/>
+                    <Separator/>
+                    <MenuItem Header="Settings" Click="OpenSettings"/>
+                </MenuItem>
+            </Menu>
+
+            <!--Tool Bar-->
+            <ToolBar>
+                <!--@todo Use add Visual Studio Image Library icons-->
+                <Button Content="Create File" Click="CreateFile"/>
+                <Button Name="DeleteFileButton" Content="Delete File" IsEnabled="False" Click="DeleteFile"/>
                 <Separator/>
-                <MenuItem Header="Settings" Click="OpenSettings"/>
-                <Separator/>
-                <MenuItem Header="Exit" Click="Exit"/>
-            </MenuItem>
+                <Button Content="Undo"/>
+                <Button Content="Redo"/>
+            </ToolBar>
+        </StackPanel>
 
-            <MenuItem Header="Edit">
-                <MenuItem Header="Undo"/>
-                <MenuItem Header="Redo"/>
-            </MenuItem>
-
-            <MenuItem Header="View">
-                <MenuItem Header="Word Wrap" IsCheckable="True"/>
-                <!--@todo implement functionality-->
-            </MenuItem>
-
-            <MenuItem Header="Tools">
-                <MenuItem Header="Build"/>
-            </MenuItem>
-        </Menu>
-
-        <!--Tool Bar-->
-        <ToolBar Grid.Row="1" Grid.ColumnSpan="2">
-            <!--@todo Use add Visual Studio Image Library icons-->
-            <Button Content="Create File" Click="CreateFile"/>
-            <Button Name="DeleteFileButton" Content="Delete File" IsEnabled="False" Click="DeleteFile"/>
-            <Separator/>
-            <Button Content="Undo"/>
-            <Button Content="Redo"/>
-        </ToolBar>
 
         <!--Folder Structure View-->
-        <TreeView Name="ProjectTree" Grid.Row="2" BorderThickness="0,0,1,1" SelectedItemChanged="ListClassMethods"/>
+        <TreeView Name="ProjectTree" Grid.Row="1" BorderThickness="0" SelectedItemChanged="ListClassMethods"/>
+
+        <!--Resize Splitters-->
+        <GridSplitter Grid.Row="1" Grid.Column="1" Grid.RowSpan="3" Width="2" HorizontalAlignment="Stretch" Background="LightGray"/>
+        <GridSplitter Grid.Row="2" Height="2" HorizontalAlignment="Stretch" Background="LightGray"/>
 
         <!--Hierarchy View-->
-        <ListView Name="MethodList" Grid.Row="3" BorderThickness="0,0,1,0"/>
+        <ListView Name="MethodList" Grid.Row="3" BorderThickness="0"/>
 
         <!--Text Editor-->
-        <TextBox Grid.Column="1" Grid.Row="2" Grid.RowSpan="2" BorderThickness="0" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Auto" TextWrapping="Wrap" AcceptsReturn="True" AcceptsTab="True"/>
+        <TextBox Grid.Column="2" Grid.Row="1" Grid.RowSpan="3" BorderThickness="0" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Auto" TextWrapping="Wrap" AcceptsReturn="True" AcceptsTab="True"/>
 
         <!--Status Bar-->
-        <StatusBar Grid.Row="4" Grid.ColumnSpan="2">
+        <StatusBar Grid.Row="4" Grid.ColumnSpan="3">
             <StatusBarItem Content="Status:"/>
         </StatusBar>
     </Grid>

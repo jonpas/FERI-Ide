@@ -5,9 +5,31 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Ide"
         mc:Ignorable="d"
-        Title="Settings" Height="300" Width="300">
-    <StackPanel>
-        <Button Content="OK" IsDefault="True" Click="ConfirmSettings"/>
-        <Button Content="Cancel" IsCancel="True"/>
-    </StackPanel>
+        Title="Settings" ResizeMode="NoResize" Height="600" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="15*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TabControl BorderThickness="0,1,0,0">
+            <TabItem Header="General">
+                <!--TODO-->
+            </TabItem>
+
+            <TabItem Header="Languages">
+                <!--TODO-->
+            </TabItem>
+
+            <TabItem Header="Frameworks">
+                <!--TODO-->
+            </TabItem>
+        </TabControl>
+
+        <StackPanel Grid.Row="1" HorizontalAlignment="Right" Orientation="Horizontal" Margin="5">
+            <!--TODO: Make prettier-->
+            <Button Content="OK"  IsDefault="True" Width="100" Margin="0,0,10,0" Padding="5,0,5,0" Click="ConfirmSettings"/>
+            <Button Content="Cancel" IsCancel="True" Width="100" Padding="5,0,5,03"/>
+        </StackPanel>
+    </Grid>
 </Window>

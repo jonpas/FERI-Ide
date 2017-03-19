@@ -72,7 +72,8 @@ namespace Ide
             // Clean up tree view if Cancel was not selected
             if (saveResult != MessageBoxResult.Cancel)
             {
-                ProjectTree.Items.Clear();
+                ProjectTree.Items.Remove(ProjectTree.SelectedItem);
+                //TODO: ability to have sub-item selected
             }
         }
 
