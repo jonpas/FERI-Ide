@@ -103,8 +103,42 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="rsc\" />
+    <Resource Include="Resources\Close_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Redo_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Save_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\SaveAll_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\SaveAs_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Undo_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\BuildSolution_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\NewFile_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Settings_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\DeleteFolder_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\NewFileCollection_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\NoResults_16x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

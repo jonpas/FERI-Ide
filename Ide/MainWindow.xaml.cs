@@ -87,11 +87,13 @@ namespace Ide
             {
                 // Disable delete file button
                 DeleteFileButton.IsEnabled = false;
+                DeleteFileButton.Opacity = 0.25;
             }
             else
             {
                 // Enable delete file button
                 DeleteFileButton.IsEnabled = true;
+                DeleteFileButton.Opacity = 1;
 
                 // Add selected class methods to method list
                 ListViewItem item;
@@ -134,6 +136,14 @@ namespace Ide
             {
                 MessageBox.Show("Settings", "OK", MessageBoxButton.OK);
             }
+        }
+
+        private void ToggleWordWrap(object sender, RoutedEventArgs e)
+        {
+            if (TextEditor.TextWrapping == TextWrapping.Wrap)
+                TextEditor.TextWrapping = TextWrapping.NoWrap;
+            else
+                TextEditor.TextWrapping = TextWrapping.Wrap;
         }
     }
 }
