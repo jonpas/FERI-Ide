@@ -5,7 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Ide"
         mc:Ignorable="d"
-        Title="Settings" ResizeMode="NoResize" Height="600" Width="800" Icon="Resources/Settings_16x.png">
+        Title="Settings"
+        Height="600" Width="800" ResizeMode="NoResize"
+        Icon="Resources/Settings_16x.png">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="15*" />

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml.Serialization;
 
 namespace Ide
 {
@@ -23,6 +25,11 @@ namespace Ide
         public MainWindow()
         {
             InitializeComponent();
+
+            XmlSerializer serializer = new XmlSerializer(typeof(string));
+            TextReader reader = new StreamReader(@"IdePersist.xml");
+            TextEditor.Text = (string)serializer.Deserialize(reader);
+            reader.Close();
         }
 
         private void Exit(object sender, RoutedEventArgs e)
@@ -144,6 +151,15 @@ namespace Ide
                 TextEditor.TextWrapping = TextWrapping.NoWrap;
             else
                 TextEditor.TextWrapping = TextWrapping.Wrap;
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(string));
+            using (TextWriter writer = new StreamWriter(@"IdePersist.xml"))
+            {
+                serializer.Serialize(writer, TextEditor.Text);
+            }
         }
     }
 }
