@@ -56,9 +56,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Settings.xaml.cs">
-      <DependentUpon>Settings.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="Cache.cs" />
+    <Compile Include="SettingsWindow.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -71,7 +70,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Settings.xaml">
+    <Page Include="SettingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>XamlIntelliSenseFileGenerator</Generator>
     </Page>
@@ -103,7 +102,13 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\FileTypes\ConfigurationFile_16x.png" />
+    <Resource Include="Resources\FileTypes\CS_16x.png" />
+    <Resource Include="Resources\FileTypes\Document_16x.png" />
+    <Resource Include="Resources\FileTypes\Image_16x.png" />
+    <Resource Include="Resources\FileTypes\XMLFile_16x.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Close_16x.png" />
   </ItemGroup>
@@ -139,6 +144,20 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\NoResults_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\FileTypes\Folder_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\FileTypes\FolderOpen_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\FileTypes\ProjectFolderOpen_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\FileTypes\MethodPrivate_16x.png" />
+    <Resource Include="Resources\FileTypes\MethodProtect_16x.png" />
+    <Resource Include="Resources\FileTypes\Method_purple_16x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

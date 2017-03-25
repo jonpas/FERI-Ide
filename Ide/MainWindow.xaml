@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Ide IDE"
         Height="700" Width="1200" MinWidth="600" MinHeight="400"
-        Closing="Window_Closing">
+        Closing="SaveCache">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -27,12 +27,12 @@
         <StackPanel Grid.ColumnSpan="3">
             <Menu>
                 <MenuItem Header="File">
-                    <MenuItem Header="Create Project..." Click="CreateProject">
+                    <MenuItem Name="CreateProjectMenuItem" Header="Create Project..." Click="CreateProject">
                         <MenuItem.Icon>
                             <Image Source="Resources/NewFileCollection_16x.png"/>
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Header="Close Project" Click="CloseProject">
+                    <MenuItem Name="CloseProjectMenuItem" Header="Close Project" IsEnabled="False" Click="CloseProject">
                         <MenuItem.Icon>
                             <Image Source="Resources/DeleteFolder_16x.png"/>
                         </MenuItem.Icon>
@@ -123,17 +123,21 @@
 
 
         <!--Folder Structure View-->
-        <TreeView Name="ProjectTree" Grid.Row="1" BorderThickness="0" SelectedItemChanged="ListClassMethods"/>
+        <TreeView Name="ProjectTree" Grid.Row="1" BorderThickness="0" SelectedItemChanged="ProjectItemSelected" TreeViewItem.Expanded="ProjectTreeFolderExpanded" TreeViewItem.Collapsed="ProjectTreeFolderCollapsed"/>
 
         <!--Resize Splitters-->
         <GridSplitter Grid.Row="1" Grid.Column="1" Grid.RowSpan="3" Width="2" HorizontalAlignment="Stretch" Background="LightGray"/>
         <GridSplitter Grid.Row="2" Height="2" HorizontalAlignment="Stretch" Background="LightGray"/>
 
         <!--Hierarchy View-->
-        <ListView Name="MethodList" Grid.Row="3" BorderThickness="0"/>
+        <ListView Name="MethodList" Grid.Row="3" BorderThickness="0" SelectionChanged="MethodSelected"/>
 
         <!--Text Editor-->
-        <TextBox Name="TextEditor" Grid.Column="2" Grid.Row="1" Grid.RowSpan="3" BorderThickness="0" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Auto" AcceptsReturn="True" AcceptsTab="True"/>
+        <TabControl Grid.Column="2" Grid.Row="1" Grid.RowSpan="3" BorderThickness="0,1,0,0">
+            <TabItem Header="No File" FontStyle="Italic">
+                <TextBox Name="TextEditor" FontStyle="Normal" BorderThickness="0" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Auto" AcceptsReturn="True" AcceptsTab="True"/>
+            </TabItem>
+        </TabControl>
 
         <!--Status Bar-->
         <StatusBar Grid.Row="4" Grid.ColumnSpan="3">

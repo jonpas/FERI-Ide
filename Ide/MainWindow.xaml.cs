@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -26,10 +28,29 @@ namespace Ide
         {
             InitializeComponent();
 
-            XmlSerializer serializer = new XmlSerializer(typeof(string));
-            TextReader reader = new StreamReader(@"IdePersist.xml");
-            TextEditor.Text = (string)serializer.Deserialize(reader);
-            reader.Close();
+            // Load cache
+            XmlSerializer serializer = new XmlSerializer(typeof(Cache));
+            if (File.Exists("Cache.xml"))
+            {
+                using (TextReader reader = new StreamReader(@"Cache.xml"))
+                {
+                    try
+                    {
+                        Cache cache = (Cache)serializer.Deserialize(reader);
+                        TextEditor.TextWrapping = cache.WordWrap; //TODO: Change the box check
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Error! Cache failed deserializing!");
+                    }
+                }
+            }
+        }
+
+        private void ToggleButtonAvailability(Control sender)
+        {
+            sender.IsEnabled = !sender.IsEnabled;
+            sender.Opacity = sender.IsEnabled ? 1 : 0.25;
         }
 
         private void Exit(object sender, RoutedEventArgs e)
@@ -37,38 +58,87 @@ namespace Ide
             Application.Current.Shutdown();
         }
 
-        private void CreateProject(object sender, RoutedEventArgs e)
+        private TreeViewItem CreateProjectItem(TreeViewItem parent, string path, bool folder)
         {
-            //TODO: not use dummy hardcoded content
-            TreeViewItem itemProject = new TreeViewItem();
-            itemProject.Header = "Project \"Ide\"";
-            ProjectTree.Items.Add(itemProject);
-            itemProject.ExpandSubtree();
+            StackPanel holder = new StackPanel();
+            holder.Orientation = Orientation.Horizontal;
+
+            Image img = new Image();
+            Uri imgUri;
+            if (folder)
+            {
+                imgUri = new Uri(@"Resources\FileTypes\Folder_16x.png", UriKind.Relative);
+                //img.Events
+            }
+            else
+            {
+                switch (path)
+                {
+                    case string f when f.EndsWith(".cs"):
+                        imgUri = new Uri(@"Resources\FileTypes\CS_16x.png", UriKind.Relative);
+                        break;
+                    case string f when f.EndsWith(".xaml"):
+                        imgUri = new Uri(@"Resources\FileTypes\XMLFile_16x.png", UriKind.Relative);
+                        break;
+                    case string f when f.EndsWith(".config"):
+                        imgUri = new Uri(@"Resources\FileTypes\ConfigurationFile_16x.png", UriKind.Relative);
+                        break;
+                    case string f when f.EndsWith(".png"):
+                        imgUri = new Uri(@"Resources\FileTypes\Image_16x.png", UriKind.Relative);
+                        break;
+                    default:
+                        imgUri = new Uri(@"Resources\FileTypes\Document_16x.png", UriKind.Relative);
+                        break;
+                }
+            }
+
+            img.Source = new BitmapImage(imgUri);
+            holder.Children.Add(img);
+            TextBlock fileName = new TextBlock() { Text = System.IO.Path.GetFileName(path), Margin = new Thickness(5, 0, 0, 0) };
+            holder.Children.Add(fileName);
 
             TreeViewItem item = new TreeViewItem();
-            item.Header = "Resources";
-            itemProject.Items.Add(item);
-            TreeViewItem itemSub = new TreeViewItem();
-            itemSub.Header = "picture_folder.png";
-            item.Items.Add(itemSub);
-            itemSub = new TreeViewItem();
-            itemSub.Header = "picture_save.png";
-            item.Items.Add(itemSub);
+            item.Header = holder;
+            item.FontWeight = FontWeights.Regular; // Inherits 'Bold' from parent
+            parent.Items.Add(item);
 
-            item = new TreeViewItem();
-            item.Header = "App.config";
-            itemProject.Items.Add(item);
-            item = new TreeViewItem();
-            item.Header = "App.xaml";
-            itemProject.Items.Add(item);
+            return item;
+        }
 
-            item = new TreeViewItem();
-            item.Header = "MainWindow.xaml";
-            itemProject.Items.Add(item);
-            itemSub = new TreeViewItem();
-            itemSub.Header = "MainWindow.xaml.cs";
-            item.Items.Add(itemSub);
+        private void CreateProjectTree(TreeViewItem parent, string parentDir)
+        {
+            foreach (var dir in Directory.GetDirectories(parentDir))
+            {
+                TreeViewItem dirItem = CreateProjectItem(parent, dir, true);
+                CreateProjectTree(dirItem, dir);
+            }
 
+            foreach (var file in Directory.GetFiles(parentDir))
+            {
+                CreateProjectItem(parent, file, false);
+            }
+        }
+
+        private void CreateProject(object sender, RoutedEventArgs e)
+        {
+            StackPanel holder = new StackPanel();
+            holder.Orientation = Orientation.Horizontal;
+
+            Image img = new Image() { Source = new BitmapImage(new Uri(@"Resources\FileTypes\ProjectFolderOpen_16x.png", UriKind.Relative)) };
+            holder.Children.Add(img);
+            TextBlock fileName = new TextBlock() { Text = "Project '" + new DirectoryInfo(@"..\..").Name + "'", Margin = new Thickness(5, 0, 0, 0) };
+            holder.Children.Add(fileName);
+
+            TreeViewItem projectItem = new TreeViewItem();
+            projectItem.Header = holder;
+            projectItem.FontWeight = FontWeights.Bold;
+            ProjectTree.Items.Add(projectItem);
+            projectItem.ExpandSubtree();
+
+            CreateProjectTree(projectItem, @"..\..\");
+
+            ToggleButtonAvailability(CreateProjectMenuItem);
+            ToggleButtonAvailability(CloseProjectMenuItem);
         }
 
         private void CloseProject(object sender, RoutedEventArgs e)
@@ -79,70 +149,182 @@ namespace Ide
             // Clean up tree view if Cancel was not selected
             if (saveResult != MessageBoxResult.Cancel)
             {
-                ProjectTree.Items.Remove(ProjectTree.SelectedItem);
-                //TODO: ability to have sub-item selected
+                ProjectTree.Items.Clear();
             }
-        }
 
-        private void ListClassMethods(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-            // Remove previous items
-            MethodList.Items.Clear();
+            ToggleButtonAvailability(CreateProjectMenuItem);
+            ToggleButtonAvailability(CloseProjectMenuItem);
 
-            TreeViewItem selectedItem = e.NewValue as TreeViewItem;
-            if (selectedItem == null)
-            {
-                // Disable delete file button
-                DeleteFileButton.IsEnabled = false;
-                DeleteFileButton.Opacity = 0.25;
-            }
-            else
-            {
-                // Enable delete file button
-                DeleteFileButton.IsEnabled = true;
-                DeleteFileButton.Opacity = 1;
-
-                // Add selected class methods to method list
-                ListViewItem item;
-                if (selectedItem.Header.ToString().Contains(".cs"))
-                {
-                    //TODO: not use dummy hardcoded content
-                    item = new ListViewItem();
-                    item.Content = "void CreateProject()";
-                    MethodList.Items.Add(item);
-
-                    item = new ListViewItem();
-                    item.Content = "void CloseProject()";
-                    MethodList.Items.Add(item);
-
-                    item = new ListViewItem();
-                    item.Content = "void ListClassMethods()";
-                    MethodList.Items.Add(item);
-                }
-            }
+            TabItem tab = (TabItem)TextEditor.Parent;
+            tab.Content = "";
+            tab.Header = "No File";
+            tab.FontStyle = FontStyles.Italic;
         }
 
         private void CreateFile(object sender, RoutedEventArgs e)
         {
             TreeViewItem item = new TreeViewItem();
-            item.Header = "new_file.txt";
-            ProjectTree.Items.Add(item);
+            item.Header = "Untitled.txt";
+            item.FontWeight = FontWeights.Regular; // Inherits 'Bold' from parent
+
+            if (ProjectTree.HasItems)
+            {
+                TreeViewItem projectItem = (TreeViewItem)ProjectTree.Items.GetItemAt(0);
+                projectItem.Items.Add(item);
+
+                TextEditor.Text = "/* Default text */"; //TODO: No static text
+            }
+            else
+            {
+                MessageBox.Show("Create or open a project to add files.", "No project open!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void DeleteFile(object sender, RoutedEventArgs e)
         {
-            TreeViewItem item = (TreeViewItem)ProjectTree.SelectedItem;
-            ProjectTree.Items.Remove(ProjectTree.SelectedItem);
-            //TODO: ability to remove sub-items
+            TreeViewItem selectedItem = (TreeViewItem)ProjectTree.SelectedItem;
+            TreeViewItem parentItem = (TreeViewItem)selectedItem.Parent;
+            parentItem.Items.Remove(selectedItem);
+
+            TabItem tab = (TabItem)TextEditor.Parent;
+            tab.Content = "";
+            tab.Header = "No File";
+            tab.FontStyle = FontStyles.Italic;
+        }
+
+        private void CreateMethodItem(string type, string content, string filePath)
+        {
+            StackPanel holder = new StackPanel();
+            holder.Orientation = Orientation.Horizontal;
+
+            Uri imgUri;
+            switch (type)
+            {
+                case "private":
+                    imgUri = new Uri(@"Resources\FileTypes\MethodPrivate_16x.png", UriKind.Relative);
+                    break;
+                case "protected":
+                    imgUri = new Uri(@"Resources\FileTypes\MethodProtect_16x.png", UriKind.Relative);
+                    break;
+                case "public":
+                    imgUri = new Uri(@"Resources\FileTypes\Method_purple_16x.png", UriKind.Relative);
+                    break;
+                default:
+                    imgUri = new Uri(@"Resources\FileTypes\Document_16x.png", UriKind.Relative);
+                    break;
+            }
+
+            Image img = new Image() { Source = new BitmapImage(imgUri) };
+            holder.Children.Add(img);
+            TextBlock text = new TextBlock() { Text = content, Margin = new Thickness(5, 0, 0, 0) };
+            holder.Children.Add(text);
+
+            ListViewItem item = new ListViewItem();
+            item.Content = holder;
+            item.Tag = filePath;
+            MethodList.Items.Add(item);
+        }
+
+        private void ProjectItemSelected(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            // Remove previous items
+            MethodList.Items.Clear();
+
+            TreeViewItem selectedItem = (TreeViewItem)e.NewValue;
+            StackPanel selectedItemHolder = (StackPanel)selectedItem.Header;
+            TextBlock selectedItemText = (TextBlock)selectedItemHolder.Children[1];
+
+            // Only disable button if null or root item selected
+            if (selectedItem == null || selectedItem == (TreeViewItem)ProjectTree.Items.GetItemAt(0))
+            {
+                if (DeleteFileButton.IsEnabled)
+                    ToggleButtonAvailability(DeleteFileButton);
+            }
+            else
+            {
+                if (!DeleteFileButton.IsEnabled)
+                    ToggleButtonAvailability(DeleteFileButton);
+
+                TabItem tab = (TabItem)TextEditor.Parent;
+                Regex regex = new Regex(@"(private|protected|public) (.+?)\)");
+
+                foreach (var filePath in Directory.GetFiles(@"..\..\", selectedItemText.Text, SearchOption.AllDirectories))
+                {
+                    // Show file contents
+                    TextEditor.Text = File.ReadAllText(filePath);
+                    tab.Header = System.IO.Path.GetFileName(filePath);//TODO: Fix crash with TabItem tab
+                    tab.FontStyle = FontStyles.Normal;
+
+                    // Add selected class methods to method list
+                    if (selectedItemText.Text.Contains(".cs"))
+                        foreach (var line in File.ReadAllLines(filePath))
+                            foreach (Match match in regex.Matches(line))
+                                if (match.Groups[2] != null)
+                                    CreateMethodItem(match.Groups[1].Value, match.Groups[2].Value + ")", filePath);
+                }
+            }
+        }
+        private void ProjectTreeFolderExpanded(object sender, RoutedEventArgs e)
+        {
+            TreeViewItem selectedItem = (TreeViewItem)e.OriginalSource;
+            StackPanel selectedItemHolder = (StackPanel)selectedItem.Header;
+            Image selectedItemImage = (Image)selectedItemHolder.Children[0];
+            string selectedItemImageSource = selectedItemImage.Source.ToString();
+
+            if (selectedItemImageSource.Contains("Folder") && selectedItem != (TreeViewItem)ProjectTree.Items.GetItemAt(0))
+                selectedItemImage.Source = new BitmapImage(new Uri(@"Resources\FileTypes\FolderOpen_16x.png", UriKind.Relative));
+        }
+
+        private void ProjectTreeFolderCollapsed(object sender, RoutedEventArgs e)
+        {
+            TreeViewItem selectedItem = (TreeViewItem)e.OriginalSource;
+            StackPanel selectedItemHolder = (StackPanel)selectedItem.Header;
+            Image selectedItemImage = (Image)selectedItemHolder.Children[0];
+            string selectedItemImageSource = selectedItemImage.Source.ToString();
+
+            if (selectedItemImageSource.Contains("Folder") && selectedItem != (TreeViewItem)ProjectTree.Items.GetItemAt(0))
+                selectedItemImage.Source = new BitmapImage(new Uri(@"Resources\FileTypes\Folder_16x.png", UriKind.Relative));
+        }
+
+        private void MethodSelected(object sender, SelectionChangedEventArgs e)
+        {
+            ListView methodList = (ListView)sender;
+            ListViewItem selectedItem = (ListViewItem)methodList.SelectedItem;
+
+            if (selectedItem != null)
+            {
+                StackPanel selectedItemHolder = (StackPanel)selectedItem.Content;
+                TextBlock selectedItemText = (TextBlock)selectedItemHolder.Children[1];
+                string method = selectedItemText.Text;
+                string filePath = (string)selectedItem.Tag;
+                TabItem tab = (TabItem)TextEditor.Parent;
+
+                Regex regex = new Regex(method.Replace("(", @"\(").Replace(")", @"\)") + @"[^{]*.\n([^}]*)}");
+                MatchCollection matches = regex.Matches(File.ReadAllText(filePath));
+
+                if (matches != null && matches.Count > 0)
+                {
+                    TextEditor.Text = matches[0].Groups[1].Value.Replace("            ", "");
+
+                    Regex regexName = new Regex(@"(\S*)\(");
+                    MatchCollection matchesName = regexName.Matches(method);
+                    if (matchesName != null && matchesName.Count > 0)
+                        tab.Header = matchesName[0].Groups[1] + "()";
+                }
+                else
+                {
+                    TextEditor.Text = "Nothing";
+                    tab.Header = "No File";
+                }
+                tab.FontStyle = FontStyles.Italic;
+            }
         }
 
         private void OpenSettings(object sender, RoutedEventArgs e)
         {
-            Settings settings = new Settings();
+            SettingsWindow settings = new SettingsWindow();
             if (settings.ShowDialog() == true)
-            {
                 MessageBox.Show("Settings", "OK", MessageBoxButton.OK);
-            }
         }
 
         private void ToggleWordWrap(object sender, RoutedEventArgs e)
@@ -153,12 +335,14 @@ namespace Ide
                 TextEditor.TextWrapping = TextWrapping.Wrap;
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void SaveCache(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(string));
-            using (TextWriter writer = new StreamWriter(@"IdePersist.xml"))
+            // Save to cache
+            XmlSerializer serializer = new XmlSerializer(typeof(Cache));
+            using (TextWriter writer = new StreamWriter(@"Cache.xml"))
             {
-                serializer.Serialize(writer, TextEditor.Text);
+                Cache cache = new Cache(TextEditor.TextWrapping);
+                serializer.Serialize(writer, cache);
             }
         }
     }
