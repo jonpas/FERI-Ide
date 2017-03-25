@@ -68,7 +68,6 @@ namespace Ide
             if (folder)
             {
                 imgUri = new Uri(@"Resources\FileTypes\Folder_16x.png", UriKind.Relative);
-                //img.Events
             }
             else
             {
@@ -94,7 +93,7 @@ namespace Ide
 
             img.Source = new BitmapImage(imgUri);
             holder.Children.Add(img);
-            TextBlock fileName = new TextBlock() { Text = System.IO.Path.GetFileName(path), Margin = new Thickness(5, 0, 0, 0) };
+            TextBlock fileName = new TextBlock() { Text = File.Exists(path) || Directory.Exists(path) ? System.IO.Path.GetFileName(path) : path, Margin = new Thickness(5, 0, 0, 0) };
             holder.Children.Add(fileName);
 
             TreeViewItem item = new TreeViewItem();
@@ -163,16 +162,10 @@ namespace Ide
 
         private void CreateFile(object sender, RoutedEventArgs e)
         {
-            TreeViewItem item = new TreeViewItem();
-            item.Header = "Untitled.txt";
-            item.FontWeight = FontWeights.Regular; // Inherits 'Bold' from parent
-
             if (ProjectTree.HasItems)
             {
-                TreeViewItem projectItem = (TreeViewItem)ProjectTree.Items.GetItemAt(0);
-                projectItem.Items.Add(item);
-
-                TextEditor.Text = "/* Default text */"; //TODO: No static text
+                CreateProjectItem((TreeViewItem)ProjectTree.Items.GetItemAt(0), "Untitled.txt", false);
+                TextEditor.Text = "/* Default text */";
             }
             else
             {
@@ -187,7 +180,7 @@ namespace Ide
             parentItem.Items.Remove(selectedItem);
 
             TabItem tab = (TabItem)TextEditor.Parent;
-            tab.Content = "";
+            tab.Header = "";
             tab.Header = "No File";
             tab.FontStyle = FontStyles.Italic;
         }
@@ -252,7 +245,7 @@ namespace Ide
                 {
                     // Show file contents
                     TextEditor.Text = File.ReadAllText(filePath);
-                    tab.Header = System.IO.Path.GetFileName(filePath);//TODO: Fix crash with TabItem tab
+                    tab.Header = System.IO.Path.GetFileName(filePath);
                     tab.FontStyle = FontStyles.Normal;
 
                     // Add selected class methods to method list
