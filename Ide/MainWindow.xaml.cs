@@ -32,7 +32,7 @@ namespace Ide
             XmlSerializer serializer = new XmlSerializer(typeof(Cache));
             if (File.Exists("Cache.xml"))
             {
-                using (TextReader reader = new StreamReader(@"Cache.xml"))
+                using (TextReader reader = new StreamReader("Cache.xml"))
                 {
                     try
                     {
@@ -67,33 +67,36 @@ namespace Ide
             Uri imgUri;
             if (folder)
             {
-                imgUri = new Uri(@"Resources\FileTypes\Folder_16x.png", UriKind.Relative);
+                imgUri = new Uri("Resources/FileTypes/Folder_16x.png", UriKind.Relative);
             }
             else
             {
                 switch (path)
                 {
                     case string f when f.EndsWith(".cs"):
-                        imgUri = new Uri(@"Resources\FileTypes\CS_16x.png", UriKind.Relative);
+                        imgUri = new Uri("Resources/FileTypes/CS_16x.png", UriKind.Relative);
                         break;
                     case string f when f.EndsWith(".xaml"):
-                        imgUri = new Uri(@"Resources\FileTypes\XMLFile_16x.png", UriKind.Relative);
+                        imgUri = new Uri("Resources/FileTypes/XMLFile_16x.png", UriKind.Relative);
                         break;
                     case string f when f.EndsWith(".config"):
-                        imgUri = new Uri(@"Resources\FileTypes\ConfigurationFile_16x.png", UriKind.Relative);
+                        imgUri = new Uri("Resources/FileTypes/ConfigurationFile_16x.png", UriKind.Relative);
                         break;
                     case string f when f.EndsWith(".png"):
-                        imgUri = new Uri(@"Resources\FileTypes\Image_16x.png", UriKind.Relative);
+                        imgUri = new Uri("Resources/FileTypes/Image_16x.png", UriKind.Relative);
                         break;
                     default:
-                        imgUri = new Uri(@"Resources\FileTypes\Document_16x.png", UriKind.Relative);
+                        imgUri = new Uri("Resources/FileTypes/Document_16x.png", UriKind.Relative);
                         break;
                 }
             }
 
             img.Source = new BitmapImage(imgUri);
             holder.Children.Add(img);
-            TextBlock fileName = new TextBlock() { Text = File.Exists(path) || Directory.Exists(path) ? System.IO.Path.GetFileName(path) : path, Margin = new Thickness(5, 0, 0, 0) };
+
+            if (File.Exists(path) || Directory.Exists(path))
+                path = System.IO.Path.GetFileName(path);
+            TextBlock fileName = new TextBlock() { Text = path, Margin = new Thickness(5, 0, 0, 0) };
             holder.Children.Add(fileName);
 
             TreeViewItem item = new TreeViewItem();
@@ -123,9 +126,9 @@ namespace Ide
             StackPanel holder = new StackPanel();
             holder.Orientation = Orientation.Horizontal;
 
-            Image img = new Image() { Source = new BitmapImage(new Uri(@"Resources\FileTypes\ProjectFolderOpen_16x.png", UriKind.Relative)) };
+            Image img = new Image() { Source = new BitmapImage(new Uri("Resources/FileTypes/ProjectFolderOpen_16x.png", UriKind.Relative)) };
             holder.Children.Add(img);
-            TextBlock fileName = new TextBlock() { Text = "Project '" + new DirectoryInfo(@"..\..").Name + "'", Margin = new Thickness(5, 0, 0, 0) };
+            TextBlock fileName = new TextBlock() { Text = "Project '" + new DirectoryInfo("../..").Name + "'", Margin = new Thickness(5, 0, 0, 0) };
             holder.Children.Add(fileName);
 
             TreeViewItem projectItem = new TreeViewItem();
@@ -134,7 +137,7 @@ namespace Ide
             ProjectTree.Items.Add(projectItem);
             projectItem.ExpandSubtree();
 
-            CreateProjectTree(projectItem, @"..\..\");
+            CreateProjectTree(projectItem, "../..");
 
             ToggleButtonAvailability(CreateProjectMenuItem);
             ToggleButtonAvailability(CloseProjectMenuItem);
@@ -194,16 +197,16 @@ namespace Ide
             switch (type)
             {
                 case "private":
-                    imgUri = new Uri(@"Resources\FileTypes\MethodPrivate_16x.png", UriKind.Relative);
+                    imgUri = new Uri("Resources/FileTypes/MethodPrivate_16x.png", UriKind.Relative);
                     break;
                 case "protected":
-                    imgUri = new Uri(@"Resources\FileTypes\MethodProtect_16x.png", UriKind.Relative);
+                    imgUri = new Uri("Resources/FileTypes/MethodProtect_16x.png", UriKind.Relative);
                     break;
                 case "public":
-                    imgUri = new Uri(@"Resources\FileTypes\Method_purple_16x.png", UriKind.Relative);
+                    imgUri = new Uri("Resources/FileTypes/Method_purple_16x.png", UriKind.Relative);
                     break;
                 default:
-                    imgUri = new Uri(@"Resources\FileTypes\Document_16x.png", UriKind.Relative);
+                    imgUri = new Uri("Resources/FileTypes/Document_16x.png", UriKind.Relative);
                     break;
             }
 
@@ -241,7 +244,7 @@ namespace Ide
                 TabItem tab = (TabItem)TextEditor.Parent;
                 Regex regex = new Regex(@"(private|protected|public) (.+?)\)");
 
-                foreach (var filePath in Directory.GetFiles(@"..\..\", selectedItemText.Text, SearchOption.AllDirectories))
+                foreach (var filePath in Directory.GetFiles("../..", selectedItemText.Text, SearchOption.AllDirectories))
                 {
                     // Show file contents
                     TextEditor.Text = File.ReadAllText(filePath);
@@ -265,7 +268,7 @@ namespace Ide
             string selectedItemImageSource = selectedItemImage.Source.ToString();
 
             if (selectedItemImageSource.Contains("Folder") && selectedItem != (TreeViewItem)ProjectTree.Items.GetItemAt(0))
-                selectedItemImage.Source = new BitmapImage(new Uri(@"Resources\FileTypes\FolderOpen_16x.png", UriKind.Relative));
+                selectedItemImage.Source = new BitmapImage(new Uri("Resources/FileTypes/FolderOpen_16x.png", UriKind.Relative));
         }
 
         private void ProjectTreeFolderCollapsed(object sender, RoutedEventArgs e)
@@ -276,7 +279,7 @@ namespace Ide
             string selectedItemImageSource = selectedItemImage.Source.ToString();
 
             if (selectedItemImageSource.Contains("Folder") && selectedItem != (TreeViewItem)ProjectTree.Items.GetItemAt(0))
-                selectedItemImage.Source = new BitmapImage(new Uri(@"Resources\FileTypes\Folder_16x.png", UriKind.Relative));
+                selectedItemImage.Source = new BitmapImage(new Uri("Resources/FileTypes/Folder_16x.png", UriKind.Relative));
         }
 
         private void MethodSelected(object sender, SelectionChangedEventArgs e)
@@ -332,7 +335,7 @@ namespace Ide
         {
             // Save to cache
             XmlSerializer serializer = new XmlSerializer(typeof(Cache));
-            using (TextWriter writer = new StreamWriter(@"Cache.xml"))
+            using (TextWriter writer = new StreamWriter("Cache.xml"))
             {
                 Cache cache = new Cache(TextEditor.TextWrapping);
                 serializer.Serialize(writer, cache);

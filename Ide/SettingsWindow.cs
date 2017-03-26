@@ -27,7 +27,7 @@ namespace Ide
         private void ConfirmSettings(object sender, RoutedEventArgs e)
         {
             //TODO: save settings
-            this.DialogResult = true;
+            DialogResult = true;
         }
     }
 }
