@@ -28,6 +28,14 @@ namespace Ide
         {
             InitializeComponent();
 
+            // Create default projects directory if it doesn't exist yet
+            string projectDir = Properties.Settings.Default.ProjectsDirectory;
+            if (projectDir == "")
+                Properties.Settings.Default.ProjectsDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Ide Projects";
+
+            if (!Directory.Exists(Properties.Settings.Default.ProjectsDirectory))
+                Directory.CreateDirectory(Properties.Settings.Default.ProjectsDirectory);
+
             // Load settings
             TextEditor.TextWrapping = (TextWrapping)Properties.Settings.Default.TextWrap;
 
