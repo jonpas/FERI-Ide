@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Settings"
         Height="600" Width="800" ResizeMode="NoResize"
-        Icon="Resources/Settings_16x.png">
+        Icon="Resources/Logo/Logo.ico">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="15*" />
@@ -20,17 +20,56 @@
             </TabItem>
 
             <TabItem Header="Languages">
-                <!--TODO-->
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="14*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Content="Languages:" FontSize="14"/>
+                    <Label Grid.Column="1" Content="Types:" FontSize="14"/>
+
+                    <ListView Grid.Row="1" Name="LanguagesList" SelectionChanged="ListTypes"/>
+                    <ListView Grid.Row="1" Grid.Column="1" Name="TypesList"/>
+
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+                        <Button Content="Add" Margin="0,0,10,0" Padding="5,0,5,0" Tag="LanguagesList" Click="AddItem"/>
+                        <Button Content="Edit" Margin="0,0,10,0" Padding="5,0,5,0" IsEnabled="{Binding ElementName=LanguagesList, Path=SelectedItems.Count}" Tag="LanguagesList" Click="EditItem"/>
+                        <Button Content="Remove" Padding="5,0,5,0" IsEnabled="{Binding ElementName=LanguagesList, Path=SelectedItems.Count}" Tag="LanguagesList" Click="RemoveItem"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+                        <Button Content="Add" Margin="0,0,10,0" Padding="5,0,5,0" IsEnabled="{Binding ElementName=LanguagesList, Path=SelectedItems.Count}" Tag="TypesList" Click="AddItem"/>
+                        <Button Content="Edit" Margin="0,0,10,0" Padding="5,0,5,0" IsEnabled="{Binding ElementName=TypesList, Path=SelectedItems.Count}" Tag="TypesList" Click="EditItem"/>
+                        <Button Content="Remove" Padding="5,0,5,0" IsEnabled="{Binding ElementName=TypesList, Path=SelectedItems.Count}" Tag="TypesList" Click="RemoveItem"/>
+                    </StackPanel>
+                </Grid>
             </TabItem>
 
             <TabItem Header="Frameworks">
-                <!--TODO-->
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="14*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <ListView Name="FrameworksList"/>
+
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+                        <Button Content="Add" Margin="0,0,10,0" Padding="5,0,5,0" Tag="FrameworksList" Click="AddItem"/>
+                        <Button Content="Edit" Margin="0,0,10,0" Padding="5,0,5,0" IsEnabled="{Binding ElementName=FrameworksList, Path=SelectedItems.Count}" Tag="FrameworksList" Click="EditItem"/>
+                        <Button Content="Remove" Padding="5,0,5,0" IsEnabled="{Binding ElementName=FrameworksList, Path=SelectedItems.Count}" Tag="FrameworksList" Click="RemoveItem"/>
+                    </StackPanel>
+                </Grid>
             </TabItem>
         </TabControl>
 
-        <StackPanel Grid.Row="1" HorizontalAlignment="Right" Orientation="Horizontal" Margin="5">
-            <!--TODO: Make prettier-->
-            <Button Content="OK"  IsDefault="True" Width="100" Margin="0,0,10,0" Padding="5,0,5,0" Click="ConfirmSettings"/>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+            <Button Content="OK" IsDefault="True" Width="100" Margin="0,0,10,0" Padding="5,0,5,0" Click="Confirm"/>
             <Button Content="Cancel" IsCancel="True" Width="100" Padding="5,0,5,03"/>
         </StackPanel>
     </Grid>

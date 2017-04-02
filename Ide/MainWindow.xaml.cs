@@ -28,29 +28,26 @@ namespace Ide
         {
             InitializeComponent();
 
-            // Load cache
-            XmlSerializer serializer = new XmlSerializer(typeof(Cache));
-            if (File.Exists("Cache.xml"))
-            {
-                using (TextReader reader = new StreamReader("Cache.xml"))
-                {
-                    try
-                    {
-                        Cache cache = (Cache)serializer.Deserialize(reader);
-                        TextEditor.TextWrapping = cache.WordWrap; //TODO: Change the box check
-                    }
-                    catch
-                    {
-                        Console.WriteLine("Error! Cache failed deserializing!");
-                    }
-                }
-            }
-        }
+            // Load settings
+            TextEditor.TextWrapping = (TextWrapping)Properties.Settings.Default.TextWrap;
 
-        private void ToggleButtonAvailability(Control sender)
-        {
-            sender.IsEnabled = !sender.IsEnabled;
-            sender.Opacity = sender.IsEnabled ? 1 : 0.25;
+            // Load cache
+            //XmlSerializer serializer = new XmlSerializer(typeof(Cache));
+            //if (File.Exists("Cache.xml"))
+            //{
+            //    using (TextReader reader = new StreamReader("Cache.xml"))
+            //    {
+            //        try
+            //        {
+            //            Cache cache = (Cache)serializer.Deserialize(reader);
+            //            TextEditor.TextWrapping = cache.WordWrap;
+            //        }
+            //        catch
+            //        {
+            //            Console.WriteLine("Error! Cache failed deserializing!");
+            //        }
+            //    }
+            //}
         }
 
         private void Exit(object sender, RoutedEventArgs e)
@@ -123,24 +120,27 @@ namespace Ide
 
         private void CreateProject(object sender, RoutedEventArgs e)
         {
-            StackPanel holder = new StackPanel();
-            holder.Orientation = Orientation.Horizontal;
+            CreateProjectWindow newProject = new CreateProjectWindow();
 
-            Image img = new Image() { Source = new BitmapImage(new Uri("Resources/FileTypes/ProjectFolderOpen_16x.png", UriKind.Relative)) };
-            holder.Children.Add(img);
-            TextBlock fileName = new TextBlock() { Text = "Project '" + new DirectoryInfo("../..").Name + "'", Margin = new Thickness(5, 0, 0, 0) };
-            holder.Children.Add(fileName);
+            if (newProject.ShowDialog() == true)
+            {
+                StackPanel holder = new StackPanel();
+                holder.Orientation = Orientation.Horizontal;
 
-            TreeViewItem projectItem = new TreeViewItem();
-            projectItem.Header = holder;
-            projectItem.FontWeight = FontWeights.Bold;
-            ProjectTree.Items.Add(projectItem);
-            projectItem.ExpandSubtree();
+                Image img = new Image() { Source = new BitmapImage(new Uri("Resources/FileTypes/ProjectFolderOpen_16x.png", UriKind.Relative)) };
+                holder.Children.Add(img);
+                TextBlock fileName = new TextBlock() { Text = "Project '" + newProject.ProjectName.Text + "'", Margin = new Thickness(5, 0, 0, 0) };
+                holder.Children.Add(fileName);
 
-            CreateProjectTree(projectItem, "../..");
+                TreeViewItem projectItem = new TreeViewItem();
+                projectItem.Tag = "Project";
+                projectItem.Header = holder;
+                projectItem.FontWeight = FontWeights.Bold;
+                ProjectTree.Items.Add(projectItem);
+                projectItem.ExpandSubtree();
 
-            ToggleButtonAvailability(CreateProjectMenuItem);
-            ToggleButtonAvailability(CloseProjectMenuItem);
+                CreateProjectTree(projectItem, newProject.LocationText.Text + "/..");
+            }
         }
 
         private void CloseProject(object sender, RoutedEventArgs e)
@@ -150,12 +150,7 @@ namespace Ide
 
             // Clean up tree view if Cancel was not selected
             if (saveResult != MessageBoxResult.Cancel)
-            {
                 ProjectTree.Items.Clear();
-            }
-
-            ToggleButtonAvailability(CreateProjectMenuItem);
-            ToggleButtonAvailability(CloseProjectMenuItem);
 
             TabItem tab = (TabItem)TextEditor.Parent;
             tab.Content = "";
@@ -169,10 +164,6 @@ namespace Ide
             {
                 CreateProjectItem((TreeViewItem)ProjectTree.Items.GetItemAt(0), "Untitled.txt", false);
                 TextEditor.Text = "/* Default text */";
-            }
-            else
-            {
-                MessageBox.Show("Create or open a project to add files.", "No project open!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -227,19 +218,12 @@ namespace Ide
             MethodList.Items.Clear();
 
             TreeViewItem selectedItem = (TreeViewItem)e.NewValue;
-            StackPanel selectedItemHolder = (StackPanel)selectedItem.Header;
-            TextBlock selectedItemText = (TextBlock)selectedItemHolder.Children[1];
 
             // Only disable button if null or root item selected
-            if (selectedItem == null || selectedItem == (TreeViewItem)ProjectTree.Items.GetItemAt(0))
+            if (selectedItem != null && selectedItem != (TreeViewItem)ProjectTree.Items.GetItemAt(0))
             {
-                if (DeleteFileButton.IsEnabled)
-                    ToggleButtonAvailability(DeleteFileButton);
-            }
-            else
-            {
-                if (!DeleteFileButton.IsEnabled)
-                    ToggleButtonAvailability(DeleteFileButton);
+                StackPanel selectedItemHolder = (StackPanel)selectedItem.Header;
+                TextBlock selectedItemText = (TextBlock)selectedItemHolder.Children[1];
 
                 TabItem tab = (TabItem)TextEditor.Parent;
                 Regex regex = new Regex(@"(private|protected|public) (.+?)\)");
@@ -247,9 +231,12 @@ namespace Ide
                 foreach (var filePath in Directory.GetFiles("../..", selectedItemText.Text, SearchOption.AllDirectories))
                 {
                     // Show file contents
-                    TextEditor.Text = File.ReadAllText(filePath);
-                    tab.Header = System.IO.Path.GetFileName(filePath);
-                    tab.FontStyle = FontStyles.Normal;
+                    if (tab != null)
+                    {
+                        TextEditor.Text = File.ReadAllText(filePath);
+                        tab.Header = System.IO.Path.GetFileName(filePath);
+                        tab.FontStyle = FontStyles.Normal;
+                    }
 
                     // Add selected class methods to method list
                     if (selectedItemText.Text.Contains(".cs"))
@@ -293,6 +280,7 @@ namespace Ide
                 TextBlock selectedItemText = (TextBlock)selectedItemHolder.Children[1];
                 string method = selectedItemText.Text;
                 string filePath = (string)selectedItem.Tag;
+
                 TabItem tab = (TabItem)TextEditor.Parent;
 
                 Regex regex = new Regex(method.Replace("(", @"\(").Replace(")", @"\)") + @"[^{]*.\n([^}]*)}");
@@ -320,26 +308,24 @@ namespace Ide
         {
             SettingsWindow settings = new SettingsWindow();
             if (settings.ShowDialog() == true)
-                MessageBox.Show("Settings", "OK", MessageBoxButton.OK);
-        }
-
-        private void ToggleWordWrap(object sender, RoutedEventArgs e)
-        {
-            if (TextEditor.TextWrapping == TextWrapping.Wrap)
-                TextEditor.TextWrapping = TextWrapping.NoWrap;
-            else
-                TextEditor.TextWrapping = TextWrapping.Wrap;
-        }
-
-        private void SaveCache(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            // Save to cache
-            XmlSerializer serializer = new XmlSerializer(typeof(Cache));
-            using (TextWriter writer = new StreamWriter("Cache.xml"))
             {
-                Cache cache = new Cache(TextEditor.TextWrapping);
-                serializer.Serialize(writer, cache);
+                //MessageBox.Show("Settings", "OK", MessageBoxButton.OK);
             }
+        }
+
+        private void Exit(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            // Save settings
+            Properties.Settings.Default.TextWrap = (int)TextEditor.TextWrapping;
+            Properties.Settings.Default.Save();
+
+            // Save to cache
+            //XmlSerializer serializer = new XmlSerializer(typeof(Cache));
+            //using (TextWriter writer = new StreamWriter("Cache.xml"))
+            //{
+            //    Cache cache = new Cache(TextEditor.TextWrapping);
+            //    serializer.Serialize(writer, cache);
+            //}
         }
     }
 }

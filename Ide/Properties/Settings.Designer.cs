@@ -22,5 +22,50 @@ namespace Ide.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Generic.List<string> Frameworks {
+            get {
+                return ((global::System.Collections.Generic.List<string>)(this["Frameworks"]));
+            }
+            set {
+                this["Frameworks"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Generic.List<string> Languages {
+            get {
+                return ((global::System.Collections.Generic.List<string>)(this["Languages"]));
+            }
+            set {
+                this["Languages"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Generic.List<System.Collections.Generic.List<string>> Types {
+            get {
+                return ((global::System.Collections.Generic.List<System.Collections.Generic.List<string>>)(this["Types"]));
+            }
+            set {
+                this["Types"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int TextWrap {
+            get {
+                return ((int)(this["TextWrap"]));
+            }
+            set {
+                this["TextWrap"] = value;
+            }
+        }
     }
 }
