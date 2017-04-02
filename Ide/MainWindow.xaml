@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Ide"
-        xmlns:properties="clr-namespace:Ide.Properties"
         mc:Ignorable="d"
         Title="Ide IDE"
         MinWidth="600" MinHeight="400"

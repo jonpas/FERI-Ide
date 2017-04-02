@@ -2,162 +2,34 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   xmlns:osb="http://www.openswatchbook.org/uri/2009/osb"
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="128"
-   height="128"
-   id="svg4695"
+   width="64px"
+   height="64px"
    version="1.1"
-   inkscape:version="0.92.1 r15371"
-   viewBox="0 0 128 128"
+   id="svg4491"
    sodipodi:docname="Logo2.svg"
-   inkscape:export-filename="E:\School\FERI-RIT-UNI\Projects\Ide\Ide\Resources\Logo\Logo2_16.png"
-   inkscape:export-xdpi="12"
-   inkscape:export-ydpi="12">
+   inkscape:export-filename="E:\School\FERI-RIT-UNI\Projects\Ide\Ide\Resources\Logo\Logo2_256.png"
+   inkscape:export-xdpi="384"
+   inkscape:export-ydpi="384"
+   inkscape:version="0.92.1 r15371">
   <defs
-     id="defs4697">
-    <linearGradient
-       inkscape:collect="always"
-       id="linearGradient4525">
-      <stop
-         style="stop-color:#2140ff;stop-opacity:1"
-         offset="0"
-         id="stop4521" />
-      <stop
-         style="stop-color:#2177ff;stop-opacity:1"
-         offset="1"
-         id="stop4523" />
-    </linearGradient>
-    <linearGradient
-       id="linearGradient4497"
-       osb:paint="solid">
-      <stop
-         style="stop-color:#000000;stop-opacity:1;"
-         offset="0"
-         id="stop4495" />
-    </linearGradient>
-    <linearGradient
-       id="linearGradient8760"
-       osb:paint="solid">
-      <stop
-         style="stop-color:#2bffff;stop-opacity:1;"
-         offset="0"
-         id="stop8758" />
-    </linearGradient>
-    <linearGradient
-       id="linearGradient8754"
-       osb:paint="solid">
-      <stop
-         style="stop-color:#2165ff;stop-opacity:1;"
-         offset="0"
-         id="stop8752" />
-    </linearGradient>
-    <linearGradient
-       id="linearGradient8570"
-       osb:paint="solid">
-      <stop
-         style="stop-color:#ffffff;stop-opacity:0.05524862;"
-         offset="0"
-         id="stop8568" />
-    </linearGradient>
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient8570"
-       id="linearGradient8572"
-       x1="2.8442383"
-       y1="13.912598"
-       x2="61.236572"
-       y2="13.912598"
-       gradientUnits="userSpaceOnUse" />
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient8570"
-       id="linearGradient8588"
-       gradientUnits="userSpaceOnUse"
-       x1="2.8442383"
-       y1="13.912598"
-       x2="61.236572"
-       y2="13.912598" />
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient8570"
-       id="linearGradient8590"
-       gradientUnits="userSpaceOnUse"
-       x1="2.8442383"
-       y1="13.912598"
-       x2="61.236572"
-       y2="13.912598" />
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient4497"
-       id="linearGradient4499"
-       x1="2.3786125"
-       y1="14.132973"
-       x2="61.702023"
-       y2="14.132973"
-       gradientUnits="userSpaceOnUse" />
-    <radialGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient4525"
-       id="radialGradient4527"
-       cx="32.040318"
-       cy="14.132972"
-       fx="32.040318"
-       fy="14.132972"
-       r="29.661707"
-       gradientTransform="matrix(1.6620515,-0.04107512,0.01099685,0.53350914,-21.367759,7.9089627)"
-       gradientUnits="userSpaceOnUse" />
-    <radialGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient4525"
-       id="radialGradient4502"
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1.6620515,-0.04107512,0.01099685,0.53350914,-21.367759,7.9089627)"
-       cx="32.040318"
-       cy="14.132972"
-       fx="32.040318"
-       fy="14.132972"
-       r="29.661707" />
-    <radialGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient4525"
-       id="radialGradient4504"
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1.6620515,-0.04107512,0.01099685,0.53350914,-21.367759,7.9089627)"
-       cx="32.040318"
-       cy="14.132972"
-       fx="32.040318"
-       fy="14.132972"
-       r="29.661707" />
-    <radialGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient4525"
-       id="radialGradient4506"
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1.6620515,-0.04107512,0.01099685,0.53350914,-21.367759,7.9089627)"
-       cx="32.040318"
-       cy="14.132972"
-       fx="32.040318"
-       fy="14.132972"
-       r="29.661707" />
-  </defs>
+     id="defs4485" />
   <sodipodi:namedview
      id="base"
-     pagecolor="#ffffff"
+     pagecolor="#0032ff"
      bordercolor="#666666"
      borderopacity="1.0"
-     inkscape:pageopacity="0.0"
+     inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="5.5"
-     inkscape:cx="36.606782"
-     inkscape:cy="70.45627"
+     inkscape:zoom="11.313708"
+     inkscape:cx="10.28478"
+     inkscape:cy="34.574314"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:document-units="px"
@@ -166,9 +38,10 @@
      inkscape:window-height="1017"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
-     inkscape:window-maximized="1" />
+     inkscape:window-maximized="1"
+     inkscape:pagecheckerboard="false" />
   <metadata
-     id="metadata4700">
+     id="metadata4488">
     <rdf:RDF>
       <cc:Work
          rdf:about="">
@@ -181,26 +54,21 @@
   </metadata>
   <g
      id="layer1"
-     inkscape:label="Text"
-     inkscape:groupmode="layer"
-     style="display:inline"
-     transform="translate(0,55.999993)">
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer">
     <flowRoot
        xml:space="preserve"
-       id="flowRoot5243"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.85876656px;line-height:0.01%;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:1.42999995px;writing-mode:lr-tb;text-anchor:middle;fill:url(#radialGradient4527);fill-opacity:1;stroke:none;stroke-width:0.59391844;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:stroke fill markers"
-       transform="matrix(1.5953258,1.5950608,-1.5953258,1.5950608,35.197024,-65.477064)"
-       inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96"
-       inkscape:export-filename="C:\Users\Timi\Desktop\flowRoot5243.png"><flowRegion
-         id="flowRegion5245"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.85876656px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:url(#radialGradient4504);fill-opacity:1;stroke:none;stroke-width:0.59391844;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:stroke fill markers"><rect
-           id="rect5247"
-           width="64.090912"
-           height="63.909092"
-           x="0"
-           y="0.090909056"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.85876656px;line-height:100%;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;word-spacing:1.42999995px;writing-mode:lr-tb;text-anchor:middle;fill:url(#radialGradient4502);fill-opacity:1;stroke:none;stroke-width:0.59391844;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:stroke fill markers" /></flowRegion><flowPara
-         id="flowPara5249"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:22.85876656px;line-height:125%;font-family:Consolas;-inkscape-font-specification:'Consolas, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;word-spacing:1px;writing-mode:lr-tb;baseline-shift:baseline;text-anchor:middle;fill:url(#radialGradient4506);fill-opacity:1;stroke:none;stroke-width:0.59391844;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:stroke fill markers">{Ide}</flowPara></flowRoot>  </g>
+       id="flowRoot5036"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#fffff8;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       transform="rotate(45,21.25751,34.934742)"><flowRegion
+         id="flowRegion5038"
+         style="fill:#fffff8;fill-opacity:1"><rect
+           id="rect5040"
+           width="63.814957"
+           height="61.133377"
+           x="-0.015597544"
+           y="2.8031223"
+           style="fill:#fffff8;fill-opacity:1" /></flowRegion><flowPara
+         id="flowPara5042"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:64px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#fffff8;fill-opacity:1">{</flowPara></flowRoot>  </g>
 </svg>
