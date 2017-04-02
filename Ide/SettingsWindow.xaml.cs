@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
@@ -55,6 +56,18 @@ namespace Ide
                 {
                     AddItem(FrameworksList, item);
                 }
+            }
+        }
+
+        private void Browse(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog dlg = new SaveFileDialog();
+            dlg.InitialDirectory = Properties.Settings.Default.ProjectsDirectory;
+            dlg.FileName = "Select Folder";
+
+            if (dlg.ShowDialog() == true)
+            {
+                Properties.Settings.Default.ProjectsDirectory = System.IO.Path.GetDirectoryName(dlg.FileName);
             }
         }
 

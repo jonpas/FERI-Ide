@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +24,16 @@ namespace Ide
         public CreateProjectWindow()
         {
             InitializeComponent();
+
+            // Create default projects directory if it doesn't exist yet
+            string projectDir = Properties.Settings.Default.ProjectsDirectory;
+            if (projectDir == "")
+                Properties.Settings.Default.ProjectsDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Ide Projects";
+
+            if (!Directory.Exists(Properties.Settings.Default.ProjectsDirectory))
+                Directory.CreateDirectory(Properties.Settings.Default.ProjectsDirectory);
+
+            LocationText.Text = Properties.Settings.Default.ProjectsDirectory + @"\NewProject.xml";
         }
 
         private void ListTypes(object sender, SelectionChangedEventArgs e)
@@ -40,8 +52,8 @@ namespace Ide
 
         private void Browse(object sender, RoutedEventArgs e)
         {
-            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
-            dlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            SaveFileDialog dlg = new SaveFileDialog();
+            dlg.InitialDirectory = Properties.Settings.Default.ProjectsDirectory;
             dlg.Filter = "Text documents (.xml)|*.xml"; // Filter files by extension
 
             if (dlg.ShowDialog() == true)
@@ -52,6 +64,9 @@ namespace Ide
 
         private void Confirm(object sender, RoutedEventArgs e)
         {
+            if (ProjectName.Text == "")
+                ProjectName.Text = "Untitled";
+
             DialogResult = true;
         }
     }

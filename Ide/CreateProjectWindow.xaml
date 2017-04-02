@@ -14,20 +14,17 @@
             <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
+        <StackPanel Orientation="Vertical">
             <Label Content="Project Name:"/>
             <TextBox Name="ProjectName" Margin="5,0,5,0"/>
 
             <Label Content="Language:"/>
-            <!--TODO: Populate with languages from settings-->
             <ComboBox Margin="5,0,5,0" ItemsSource="{Binding Source={x:Static properties:Settings.Default}, Path=Languages}" SelectionChanged="ListTypes"/>
 
             <Label Content="Type:"/>
-            <!--TODO: Populate with project types from settings-->
             <ComboBox Name="TypesList" Margin="5,0,5,0"/>
 
             <Label Content="Framework:"/>
-            <!--TODO: Populate with frameworks from settings-->
             <ComboBox Margin="5,0,5,0" ItemsSource="{Binding Source={x:Static properties:Settings.Default}, Path=Frameworks}"/>
 
             <StackPanel Orientation="Horizontal" Margin="0,5,0,0">

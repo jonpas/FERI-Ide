@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Ide"
+        xmlns:properties="clr-namespace:Ide.Properties"
         mc:Ignorable="d"
         Title="Settings"
         Height="600" Width="800" ResizeMode="NoResize"
@@ -16,15 +17,22 @@
 
         <TabControl BorderThickness="0,1,0,0">
             <TabItem Header="General">
-                <!--TODO-->
+                <!--TODO: Make this look prettier-->
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                        <Label Content="Projects Directory:"/>
+                        <Button Content="Browse" Padding="5,0,5,0" Click="Browse"/>
+                        <TextBox Name="ProjectsDirectoryText" Text="{Binding Source={x:Static properties:Settings.Default}, Path=ProjectsDirectory}" IsEnabled="False" Margin="5,5,5,0"/>
+                    </StackPanel>
+                </StackPanel>
             </TabItem>
 
             <TabItem Header="Languages">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="14*" />
-                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="14*"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>

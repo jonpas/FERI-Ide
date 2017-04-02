@@ -140,6 +140,8 @@ namespace Ide
                 projectItem.ExpandSubtree();
 
                 CreateProjectTree(projectItem, newProject.LocationText.Text + "/..");
+
+                //TODO: Save project path for later use
             }
         }
 
@@ -160,9 +162,20 @@ namespace Ide
 
         private void CreateFile(object sender, RoutedEventArgs e)
         {
-            if (ProjectTree.HasItems)
+            InputWindow input = new InputWindow();
+
+            if (input.ShowDialog() == true)
             {
-                CreateProjectItem((TreeViewItem)ProjectTree.Items.GetItemAt(0), "Untitled.txt", false);
+                string fileName = input.Input.Text;
+                if (fileName == "")
+                    fileName = "Untitled.txt"; // Default name
+                else if (!fileName.Contains("."))
+                    fileName += ".txt"; // Default extension
+
+                //TODO: Add under (folder selected) or next (item selected) to currently selected item
+                //TODO: Check if file already exists
+
+                CreateProjectItem((TreeViewItem)ProjectTree.Items.GetItemAt(0), fileName, false);
                 TextEditor.Text = "/* Default text */";
             }
         }
@@ -228,7 +241,8 @@ namespace Ide
                 TabItem tab = (TabItem)TextEditor.Parent;
                 Regex regex = new Regex(@"(private|protected|public) (.+?)\)");
 
-                foreach (var filePath in Directory.GetFiles("../..", selectedItemText.Text, SearchOption.AllDirectories))
+                //TODO: Use current open project
+                foreach (var filePath in Directory.GetFiles(Properties.Settings.Default.ProjectsDirectory, selectedItemText.Text, SearchOption.AllDirectories))
                 {
                     // Show file contents
                     if (tab != null)

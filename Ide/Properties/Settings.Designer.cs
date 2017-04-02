@@ -67,5 +67,17 @@ namespace Ide.Properties {
                 this["TextWrap"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ProjectsDirectory {
+            get {
+                return ((string)(this["ProjectsDirectory"]));
+            }
+            set {
+                this["ProjectsDirectory"] = value;
+            }
+        }
     }
 }
