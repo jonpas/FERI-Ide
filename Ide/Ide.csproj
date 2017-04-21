@@ -57,6 +57,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Cache.cs" />
+    <Compile Include="Controls\ProjectStructure.xaml.cs">
+      <DependentUpon>ProjectStructure.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\IsNotProjectConverter.cs" />
     <Compile Include="Converters\InvertBoolConverter.cs" />
     <Compile Include="Converters\TextWrapConverter.cs" />
@@ -68,9 +71,13 @@
     </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="SettingsWindow.xaml.cs">
-        <DependentUpon>SettingsWindow.xaml</DependentUpon>
-        <SubType>Code</SubType>
+      <DependentUpon>SettingsWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
     </Compile>
+    <Page Include="Controls\ProjectStructure.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="CreateProjectWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
