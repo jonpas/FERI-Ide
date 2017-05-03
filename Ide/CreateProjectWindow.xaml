@@ -19,10 +19,20 @@
             <TextBox Name="ProjectName" Margin="5,0,5,0"/>
 
             <Label Content="Language:"/>
-            <ComboBox Margin="5,0,5,0" ItemsSource="{Binding Source={x:Static properties:Settings.Default}, Path=Languages}" SelectionChanged="ListTypes"/>
+            <ComboBox Name="LanguagesList" Margin="5,0,5,0" ItemsSource="{Binding Source={x:Static properties:Settings.Default}, Path=Languages}" SelectionChanged="ListTypes"/>
 
             <Label Content="Type:"/>
-            <ComboBox Name="TypesList" Margin="5,0,5,0"/>
+            <ComboBox Name="TypesList" Margin="5,0,5,0">
+                <ComboBox.Style>
+                    <Style TargetType="{x:Type ComboBox}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=LanguagesList, Path=SelectedItem}" Value="{x:Null}">
+                                <Setter Property="IsEnabled" Value="False"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ComboBox.Style>
+            </ComboBox>
 
             <Label Content="Framework:"/>
             <ComboBox Margin="5,0,5,0" ItemsSource="{Binding Source={x:Static properties:Settings.Default}, Path=Frameworks}"/>
@@ -31,7 +41,7 @@
                 <Label Content="Project File Location:"/>
                 <Button Content="Browse" Padding="5,0,5,0" Click="Browse"/>
             </StackPanel>
-            <TextBox Name="LocationText" IsEnabled="False" Margin="5,5,5,0"/>
+            <TextBox Name="LocationText" IsEnabled="False" Margin="5,5,5,0"/>  <!-- Disabled as SaveFileDialog handles .xml requirement -->
         </StackPanel>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,5,0,5">

@@ -73,10 +73,17 @@ namespace Ide
 
         private void AddItem(ListView list, string text)
         {
-            ListViewItem item = new ListViewItem();
-            item.Content = text;
-            list.Items.Add(item);
-            languageTypes.Add(text, new List<string>());
+            if (!languageTypes.ContainsKey(text))
+            {
+                ListViewItem item = new ListViewItem();
+                item.Content = text;
+                list.Items.Add(item);
+                languageTypes.Add(text, new List<string>());
+            }
+            else
+            {
+                //TODO Notify type already exists
+            }
         }
 
         private void AddItem(object sender, RoutedEventArgs e)
@@ -89,18 +96,26 @@ namespace Ide
             if (language.ShowDialog() == true)
             {
                 string text = language.Input.Text;
-                var types = new List<string>() { "test" };
 
                 if (list == TypesList)
                 {
                     // Add type
                     string selectedLangauge = (string)((ListViewItem)LanguagesList.SelectedItem).Content;
 
+                    var types = new List<string>();
                     if (languageTypes.TryGetValue(selectedLangauge, out types))
                     {
-                        types.Add(text);
-                        languageTypes[selectedLangauge] = types;
-                        ListTypes();
+                        if (!types.Contains(text))
+                        {
+                            //TODO Don't save types list on Cancel
+                            types.Add(text);
+                            languageTypes[selectedLangauge] = types;
+                            ListTypes();
+                        }
+                        else
+                        {
+                            //TODO Notify type already exists
+                        }
                     }
                 }
                 else
@@ -138,14 +153,18 @@ namespace Ide
         {
             TypesList.Items.Clear();
 
-            string selectedLangauge = (string)((ListViewItem)LanguagesList.SelectedItem).Content;
-
-            List<string> types;
-            if (languageTypes.TryGetValue(selectedLangauge, out types))
+            ListViewItem selectedLanguageItem = (ListViewItem)LanguagesList.SelectedItem;
+            if (selectedLanguageItem != null)
             {
-                foreach (var type in types)
+                string selectedLangauge = (string)selectedLanguageItem.Content;
+
+                List<string> types;
+                if (languageTypes.TryGetValue(selectedLangauge, out types))
                 {
-                    TypesList.Items.Add(type);
+                    foreach (var type in types)
+                    {
+                        TypesList.Items.Add(type);
+                    }
                 }
             }
         }

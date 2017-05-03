@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -24,6 +25,9 @@ namespace Ide
     /// </summary>
     public partial class MainWindow : Window
     {
+        ObservableCollection<Project> Projects = new ObservableCollection<Project>();
+        ObservableCollection<Method> Methods = new ObservableCollection<Method>();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -38,6 +42,14 @@ namespace Ide
 
             // Load settings
             TextEditor.TextWrapping = (TextWrapping)Properties.Settings.Default.TextWrap;
+
+            // Test
+            Projects.Add(new Project(Properties.Settings.Default.ProjectsDirectory, "C#", "Code", "WPF"));
+
+            //TODO INotifyPropertyChanged (?)
+            ProjectTree.ItemsSource = Projects;
+            MethodList.ItemsSource = Methods;
+
 
             // Load cache
             //XmlSerializer serializer = new XmlSerializer(typeof(Cache));
@@ -65,51 +77,7 @@ namespace Ide
 
         private TreeViewItem CreateProjectItem(TreeViewItem parent, string path, bool folder)
         {
-            StackPanel holder = new StackPanel();
-            holder.Orientation = Orientation.Horizontal;
-
-            Image img = new Image();
-            Uri imgUri;
-            if (folder)
-            {
-                imgUri = new Uri("Resources/FileTypes/Folder_16x.png", UriKind.Relative);
-            }
-            else
-            {
-                switch (path)
-                {
-                    case string f when f.EndsWith(".cs"):
-                        imgUri = new Uri("Resources/FileTypes/CS_16x.png", UriKind.Relative);
-                        break;
-                    case string f when f.EndsWith(".xaml"):
-                        imgUri = new Uri("Resources/FileTypes/XMLFile_16x.png", UriKind.Relative);
-                        break;
-                    case string f when f.EndsWith(".config"):
-                        imgUri = new Uri("Resources/FileTypes/ConfigurationFile_16x.png", UriKind.Relative);
-                        break;
-                    case string f when f.EndsWith(".png"):
-                        imgUri = new Uri("Resources/FileTypes/Image_16x.png", UriKind.Relative);
-                        break;
-                    default:
-                        imgUri = new Uri("Resources/FileTypes/Document_16x.png", UriKind.Relative);
-                        break;
-                }
-            }
-
-            img.Source = new BitmapImage(imgUri);
-            holder.Children.Add(img);
-
-            if (File.Exists(path) || Directory.Exists(path))
-                path = System.IO.Path.GetFileName(path);
-            TextBlock fileName = new TextBlock() { Text = path, Margin = new Thickness(5, 0, 0, 0) };
-            holder.Children.Add(fileName);
-
-            TreeViewItem item = new TreeViewItem();
-            item.Header = holder;
-            item.FontWeight = FontWeights.Regular; // Inherits 'Bold' from parent
-            parent.Items.Add(item);
-
-            return item;
+            return null;
         }
 
         private void CreateProjectTree(TreeViewItem parent, string parentDir)
@@ -153,6 +121,41 @@ namespace Ide
             }
         }
 
+        private void RenameFileFolderProject(object sender, RoutedEventArgs e)
+        {
+            InputWindow input = new InputWindow();
+
+            if (input.ShowDialog() == true)
+            {
+                string newName = input.Input.Text;
+
+                //TODO: Check if folder of same name already exists
+                if (newName != "")
+                {
+                    if (ProjectTree.SelectedItem.GetType() == typeof(FileItem))
+                    {
+                        FileItem selectedItem = (FileItem)ProjectTree.SelectedItem;
+                        selectedItem.Name = newName;
+                        
+                    }
+                    else if (ProjectTree.SelectedItem.GetType() == typeof(FolderItem))
+                    {
+                        FolderItem selectedItem = (FolderItem)ProjectTree.SelectedItem;
+                        selectedItem.Name = newName;
+                    }
+                    else
+                    {
+                        Project selectedProject = (Project)ProjectTree.SelectedItem;
+                        selectedProject.Name = newName;
+                    }
+                }
+                else
+                {
+                    //TODO Show invalid name message
+                }
+            }
+        }
+
         private void CloseProject(object sender, RoutedEventArgs e)
         {
             //TODO: check if anything is not saved
@@ -160,7 +163,10 @@ namespace Ide
 
             // Clean up tree view if Cancel was not selected
             if (saveResult != MessageBoxResult.Cancel)
-                ProjectTree.Items.Clear();
+            {
+                Project selectedItem = (Project)ProjectTree.SelectedItem;
+                Projects.Remove(selectedItem);
+            }
 
             TabItem tab = (TabItem)TextEditor.Parent;
             tab.Content = "";
@@ -168,9 +174,10 @@ namespace Ide
             tab.FontStyle = FontStyles.Italic;
         }
 
-        private void CreateFile(object sender, RoutedEventArgs e)
+        private void CreateFileFolder(object sender, RoutedEventArgs e)
         {
             InputWindow input = new InputWindow();
+            //TODO Add creating folders
 
             if (input.ShowDialog() == true)
             {
@@ -188,11 +195,20 @@ namespace Ide
             }
         }
 
-        private void DeleteFile(object sender, RoutedEventArgs e)
+        private void DeleteFileFolder(object sender, RoutedEventArgs e)
         {
-            TreeViewItem selectedItem = (TreeViewItem)ProjectTree.SelectedItem;
-            TreeViewItem parentItem = (TreeViewItem)selectedItem.Parent;
-            parentItem.Items.Remove(selectedItem);
+            if (ProjectTree.SelectedItem.GetType() == typeof(FileItem))
+            {
+                FileItem selectedItem = (FileItem)ProjectTree.SelectedItem;
+                File.Delete(selectedItem.Info.FullName);
+                selectedItem.ContainingCollection.Remove(selectedItem);
+            }
+            else
+            {
+                FolderItem selectedItem = (FolderItem)ProjectTree.SelectedItem;
+                Directory.Delete(selectedItem.Info.FullName);
+                selectedItem.ContainingCollection.Remove(selectedItem);
+            }
 
             TabItem tab = (TabItem)TextEditor.Parent;
             tab.Header = "";
@@ -200,116 +216,68 @@ namespace Ide
             tab.FontStyle = FontStyles.Italic;
         }
 
-        private void CreateMethodItem(string type, string content, string filePath)
-        {
-            StackPanel holder = new StackPanel();
-            holder.Orientation = Orientation.Horizontal;
-
-            Uri imgUri;
-            switch (type)
-            {
-                case "private":
-                    imgUri = new Uri("Resources/FileTypes/MethodPrivate_16x.png", UriKind.Relative);
-                    break;
-                case "protected":
-                    imgUri = new Uri("Resources/FileTypes/MethodProtect_16x.png", UriKind.Relative);
-                    break;
-                case "public":
-                    imgUri = new Uri("Resources/FileTypes/Method_purple_16x.png", UriKind.Relative);
-                    break;
-                default:
-                    imgUri = new Uri("Resources/FileTypes/Document_16x.png", UriKind.Relative);
-                    break;
-            }
-
-            Image img = new Image() { Source = new BitmapImage(imgUri) };
-            holder.Children.Add(img);
-            TextBlock text = new TextBlock() { Text = content, Margin = new Thickness(5, 0, 0, 0) };
-            holder.Children.Add(text);
-
-            ListViewItem item = new ListViewItem();
-            item.Content = holder;
-            item.Tag = filePath;
-            MethodList.Items.Add(item);
-        }
-
         private void ProjectItemSelected(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             // Remove previous items
-            MethodList.Items.Clear();
+            Methods.Clear();
 
-            TreeViewItem selectedItem = (TreeViewItem)e.NewValue;
-
-            // Only disable button if null or root item selected
-            if (selectedItem != null && selectedItem != (TreeViewItem)ProjectTree.Items.GetItemAt(0))
+            if (e.NewValue != null && e.NewValue.GetType() == typeof(FileInfo))
             {
-                StackPanel selectedItemHolder = (StackPanel)selectedItem.Header;
-                TextBlock selectedItemText = (TextBlock)selectedItemHolder.Children[1];
+                FileInfo selectedItem = (FileInfo)e.NewValue;
 
                 TabItem tab = (TabItem)TextEditor.Parent;
                 Regex regex = new Regex(@"(private|protected|public) (.+?)\)");
 
-                //TODO: Use current open project
-                foreach (var filePath in Directory.GetFiles(Properties.Settings.Default.ProjectsDirectory, selectedItemText.Text, SearchOption.AllDirectories))
+                // Show file contents
+                if (tab != null)
                 {
-                    // Show file contents
-                    if (tab != null)
-                    {
-                        TextEditor.Text = File.ReadAllText(filePath);
-                        tab.Header = System.IO.Path.GetFileName(filePath);
-                        tab.FontStyle = FontStyles.Normal;
-                    }
+                    using (var reader = new StreamReader(selectedItem.FullName, Encoding.Unicode))
+                        TextEditor.Text = reader.ReadToEnd();
+                    tab.Header = selectedItem.Name;
+                    tab.FontStyle = FontStyles.Normal;
+                }
 
-                    // Add selected class methods to method list
-                    if (selectedItemText.Text.Contains(".cs"))
-                        foreach (var line in File.ReadAllLines(filePath))
-                            foreach (Match match in regex.Matches(line))
+                // Add selected class methods to method list
+                if (selectedItem.Extension == ".cs")
+                {
+                    using (var reader = new StreamReader(selectedItem.FullName, Encoding.Unicode))
+                    {
+                        while (!reader.EndOfStream)
+                        {
+                            foreach (Match match in regex.Matches(reader.ReadLine()))
+                            {
                                 if (match.Groups[2] != null)
-                                    CreateMethodItem(match.Groups[1].Value, match.Groups[2].Value + ")", filePath);
+                                {
+                                    Methods.Add(new Method(match.Groups[1].Value, match.Groups[2].Value, selectedItem)); // 1: type, 2: 
+                                }
+                            }
+                        }
+                    }
                 }
             }
-        }
-        private void ProjectTreeFolderExpanded(object sender, RoutedEventArgs e)
-        {
-            TreeViewItem selectedItem = (TreeViewItem)e.OriginalSource;
-            StackPanel selectedItemHolder = (StackPanel)selectedItem.Header;
-            Image selectedItemImage = (Image)selectedItemHolder.Children[0];
-            string selectedItemImageSource = selectedItemImage.Source.ToString();
-
-            if (selectedItemImageSource.Contains("Folder") && selectedItem != (TreeViewItem)ProjectTree.Items.GetItemAt(0))
-                selectedItemImage.Source = new BitmapImage(new Uri("Resources/FileTypes/FolderOpen_16x.png", UriKind.Relative));
-        }
-
-        private void ProjectTreeFolderCollapsed(object sender, RoutedEventArgs e)
-        {
-            TreeViewItem selectedItem = (TreeViewItem)e.OriginalSource;
-            StackPanel selectedItemHolder = (StackPanel)selectedItem.Header;
-            Image selectedItemImage = (Image)selectedItemHolder.Children[0];
-            string selectedItemImageSource = selectedItemImage.Source.ToString();
-
-            if (selectedItemImageSource.Contains("Folder") && selectedItem != (TreeViewItem)ProjectTree.Items.GetItemAt(0))
-                selectedItemImage.Source = new BitmapImage(new Uri("Resources/FileTypes/Folder_16x.png", UriKind.Relative));
         }
 
         private void MethodSelected(object sender, SelectionChangedEventArgs e)
         {
             ListView methodList = (ListView)sender;
-            ListViewItem selectedItem = (ListViewItem)methodList.SelectedItem;
+            Method selectedItem = (Method)methodList.SelectedItem;
 
             if (selectedItem != null)
             {
-                StackPanel selectedItemHolder = (StackPanel)selectedItem.Content;
-                TextBlock selectedItemText = (TextBlock)selectedItemHolder.Children[1];
-                string method = selectedItemText.Text;
-                string filePath = (string)selectedItem.Tag;
+                string method = selectedItem.Signature;
+                FileInfo filePath = selectedItem.ContainingFile;
 
                 TabItem tab = (TabItem)TextEditor.Parent;
 
                 Regex regex = new Regex(method.Replace("(", @"\(").Replace(")", @"\)") + @"[^{]*.\n([^}]*)}");
-                MatchCollection matches = regex.Matches(File.ReadAllText(filePath));
+
+                MatchCollection matches;
+                using (var reader = new StreamReader(selectedItem.ContainingFile.FullName, Encoding.Unicode))
+                    matches = regex.Matches(reader.ReadToEnd());
 
                 if (matches != null && matches.Count > 0)
                 {
+                    //TODO Navigate to whole file
                     TextEditor.Text = matches[0].Groups[1].Value.Replace("            ", "");
 
                     Regex regexName = new Regex(@"(\S*)\(");

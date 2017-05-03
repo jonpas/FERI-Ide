@@ -10,16 +10,6 @@
         MinWidth="600" MinHeight="400"
         Icon="Resources/Logo/Logo.ico"
         Closing="Exit">
-    <Window.Resources>
-        <Style x:Key="EnableDisableImageStyle" TargetType="{x:Type Image}">
-            <Style.Triggers>
-                <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="Opacity" Value="0.25"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-    </Window.Resources>
-    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -39,17 +29,18 @@
         <StackPanel Grid.ColumnSpan="3">
             <Menu>
                 <MenuItem Header="File">
-                    <MenuItem Header="Create Project..." IsEnabled="{Binding ElementName=ProjectTree, Path=HasItems, Converter={StaticResource InvertBoolConverter}}"  Click="CreateProject">
+                    <MenuItem Header="Create Project..."  Click="CreateProject">
                         <MenuItem.Icon>
-                            <Image Source="Resources/NewFileCollection_16x.png" Style="{StaticResource EnableDisableImageStyle}"/>
+                            <Image Source="Resources/NewFileCollection_16x.png"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Header="Close Project" Click="CloseProject">
                         <MenuItem.Style>
                             <Style TargetType="{x:Type MenuItem}">
+                                <Setter Property="IsEnabled" Value="False"/>
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ElementName=ProjectTree, Path=SelectedItem}" Value="{x:Null}">
-                                        <Setter Property="IsEnabled" Value="False"/>
+                                    <DataTrigger Binding="{Binding ElementName=ProjectTree, Path=SelectedItem, Converter={StaticResource TypeOfConverter}}" Value="{x:Type local:Project}">
+                                        <Setter Property="IsEnabled" Value="True"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -117,11 +108,45 @@
             <!--Tool Bar-->
             <ToolBarTray>
                 <ToolBar>
-                    <Button IsEnabled="{Binding ElementName=ProjectTree, Path=HasItems}" Click="CreateFile">
-                        <Image Source="Resources/NewFile_16x.png" ToolTip="New File" Style="{StaticResource EnableDisableImageStyle}"/>
+                    <Button Click="CreateFileFolder">
+                        <Button.Style>
+                            <Style TargetType="{x:Type Button}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=ProjectTree, Path=SelectedItem, Converter={StaticResource TypeOfConverter}}" Value="{x:Null}">
+                                        <Setter Property="IsEnabled" Value="False"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                        <Image Source="Resources/NewFile_16x.png" ToolTip="New Item" Style="{StaticResource EnableDisableImageStyle}"/>
                     </Button>
-                    <Button IsEnabled="{Binding ElementName=ProjectTree, Path=SelectedItem, Converter={StaticResource IsNotProjectConverter}}" Click="DeleteFile">
-                        <Image Source="Resources/NoResults_16x.png" ToolTip="Remove File" Style="{StaticResource EnableDisableImageStyle}"/>
+                    <Button Click="RenameFileFolderProject">
+                        <Button.Style>
+                            <Style TargetType="{x:Type Button}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=ProjectTree, Path=SelectedItem}" Value="{x:Null}">
+                                        <Setter Property="IsEnabled" Value="False"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                        <Image Source="Resources/DeleteFolder_16x.png" ToolTip="Rename Item" Style="{StaticResource EnableDisableImageStyle}"/> <!--TODO Change image-->
+                    </Button>
+                    <Button Click="DeleteFileFolder">
+                        <Button.Style>
+                            <Style TargetType="{x:Type Button}">
+                                <Setter Property="IsEnabled" Value="False"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=ProjectTree, Path=SelectedItem, Converter={StaticResource TypeOfConverter}}" Value="{x:Type local:FileItem}">
+                                        <Setter Property="IsEnabled" Value="True"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=ProjectTree, Path=SelectedItem, Converter={StaticResource TypeOfConverter}}" Value="{x:Type local:FolderItem}">
+                                        <Setter Property="IsEnabled" Value="True"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                        <Image Source="Resources/NoResults_16x.png" ToolTip="Remove Item" Style="{StaticResource EnableDisableImageStyle}"/>
                     </Button>
                     <Separator/>
                     <Button>
@@ -144,16 +169,97 @@
 
         <!--Project Structure-->
         <!--<localc:ProjectStructure Grid.Row="1" Grid.RowSpan="3"></localc:ProjectStructure>-->
-        
+
         <!--Folder Structure View-->
-        <TreeView Name="ProjectTree" Grid.Row="1" BorderThickness="0" SelectedItemChanged="ProjectItemSelected" TreeViewItem.Expanded="ProjectTreeFolderExpanded" TreeViewItem.Collapsed="ProjectTreeFolderCollapsed"/>
+        <TreeView Grid.Row="1" Name="ProjectTree" BorderThickness="0" SelectedItemChanged="ProjectItemSelected">
+            <TreeView.Resources>
+                <!--Project-->
+                <HierarchicalDataTemplate DataType="{x:Type local:Project}" ItemsSource="{Binding FilesFolders}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="Resources/FileTypes/ProjectFolderOpen_16x.png"/>
+                        <TextBlock Text="{Binding Name}"/>
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+
+                <!--Folders inside project directory-->
+                <HierarchicalDataTemplate DataType="{x:Type local:FolderItem}" ItemsSource="{Binding Children}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Name="ProjectTreeFolderImage" Source="Resources/FileTypes/Folder_16x.png"/>
+                        <TextBlock Text="{Binding Name}"/>
+                    </StackPanel>
+
+                    <HierarchicalDataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=TreeViewItem}, Path=IsExpanded}" Value="True">
+                            <Setter TargetName="ProjectTreeFolderImage" Property="Source" Value="Resources/FileTypes/FolderOpen_16x.png"/>
+                        </DataTrigger>
+                    </HierarchicalDataTemplate.Triggers>
+                </HierarchicalDataTemplate>
+
+                <!--Files inside project directory-->
+                <DataTemplate DataType="{x:Type local:FileItem}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image>
+                            <Image.Style>
+                                <Style TargetType="{x:Type Image}">
+                                    <Setter Property="Source" Value="Resources/FileTypes/Document_16x.png"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Path=Extension}" Value=".cs">
+                                            <Setter Property="Source" Value="Resources/FileTypes/CS_16x.png"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Path=Extension}" Value=".xml">
+                                            <Setter Property="Source" Value="Resources/FileTypes/XMLFile_16x.png"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Path=Extension}" Value=".xaml">
+                                            <Setter Property="Source" Value="Resources/FileTypes/XMLFile_16x.png"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Path=Extension}" Value=".config">
+                                            <Setter Property="Source" Value="Resources/FileTypes/ConfigurationFile_16x.png"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Path=Extension}" Value=".png">
+                                            <Setter Property="Source" Value="Resources/FileTypes/Image_16x.png"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                        <TextBlock Text="{Binding Name}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </TreeView.Resources>
+        </TreeView>
 
         <!--Resize Splitters-->
         <GridSplitter Grid.Row="1" Grid.Column="1" Grid.RowSpan="3" Width="2" HorizontalAlignment="Stretch" Background="LightGray"/>
-        <!--<GridSplitter Grid.Row="2" Height="2" HorizontalAlignment="Stretch" Background="LightGray"/>-->
+        <GridSplitter Grid.Row="2" Height="2" HorizontalAlignment="Stretch" Background="LightGray"/>
 
-        <!--Hierarchy View-->
-        <ListView Name="MethodList" Grid.Row="3" BorderThickness="0" SelectionChanged="MethodSelected"/>
+        <!--Method List View-->
+        <ListView Name="MethodList" Grid.Row="3" BorderThickness="0" SelectionChanged="MethodSelected">
+            <ListView.Resources>
+                <DataTemplate DataType="{x:Type local:Method}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image>
+                            <Image.Style>
+                                <Style TargetType="{x:Type Image}">
+                                    <Setter Property="Source" Value="Resources/FileTypes/Document_16x.png"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Type}" Value="private">
+                                            <Setter Property="Source" Value="Resources/FileTypes/MethodPrivate_16x.png"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Type}" Value="protected">
+                                            <Setter Property="Source" Value="Resources/FileTypes/MethodProtect_16x.png"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Type}" Value="public">
+                                            <Setter Property="Source" Value="Resources/FileTypes/Method_purple_16x.png"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                        <TextBlock Text="{Binding Signature}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.Resources>
+        </ListView>
 
         <!--Text Editor-->
         <TabControl Grid.Column="2" Grid.Row="1" Grid.RowSpan="3" BorderThickness="0,1,0,0">

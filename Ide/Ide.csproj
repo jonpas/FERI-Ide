@@ -60,15 +60,19 @@
     <Compile Include="Controls\ProjectStructure.xaml.cs">
       <DependentUpon>ProjectStructure.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Converters\IsNotProjectConverter.cs" />
     <Compile Include="Converters\InvertBoolConverter.cs" />
     <Compile Include="Converters\TextWrapConverter.cs" />
+    <Compile Include="Converters\TypeOfConverter.cs" />
     <Compile Include="CreateProjectWindow.xaml.cs">
       <DependentUpon>CreateProjectWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="FileItem.cs" />
+    <Compile Include="FolderItem.cs" />
     <Compile Include="InputWindow.xaml.cs">
       <DependentUpon>InputWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Method.cs" />
+    <Compile Include="Project.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
