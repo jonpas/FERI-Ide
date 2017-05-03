@@ -42,13 +42,15 @@ namespace Ide
 
             // Load settings
             TextEditor.TextWrapping = (TextWrapping)Properties.Settings.Default.TextWrap;
+            //TODO Save and load project structure
 
-            // Test
-            Projects.Add(new Project(Properties.Settings.Default.ProjectsDirectory, "C#", "Code", "WPF"));
-
-            //TODO INotifyPropertyChanged (?)
+            // Set binding sources
             ProjectTree.ItemsSource = Projects;
             MethodList.ItemsSource = Methods;
+
+
+            //TEST
+            Projects.Add(new Project(Properties.Settings.Default.ProjectsDirectory, "C#", "Code", "WPF"));
 
 
             // Load cache
