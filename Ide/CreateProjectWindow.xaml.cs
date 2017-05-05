@@ -21,25 +21,43 @@ namespace Ide
     /// </summary>
     public partial class CreateProjectWindow : Window
     {
+        //TODO Add 2 additional settings (task requirement)
+        public string SelectedLocation = "";
+        public string SelectedLanguage = "";
+        public string SelectedType = "";
+        public string SelectedFramework = "";
+
         public CreateProjectWindow()
         {
             InitializeComponent();
 
-            LocationText.Text = Properties.Settings.Default.ProjectsDirectory + @"\NewProject.xml";
+            LocationBox.Text = Properties.Settings.Default.ProjectsDirectory + @"\" + Constants.DefaultProjectFile;
         }
 
-        private void ListTypes(object sender, SelectionChangedEventArgs e)
+        private void SetLanguage(object sender, SelectionChangedEventArgs e)
         {
             TypesList.Items.Clear();
 
             ComboBox languagesList = (ComboBox)sender;
-            string selectedLanguage = (string)languagesList.SelectedItem;
+            SelectedLanguage = (string)languagesList.SelectedItem;
             int selectedLangaugeIndex = languagesList.SelectedIndex;
 
             foreach (var type in Properties.Settings.Default.Types[selectedLangaugeIndex])
             {
                 TypesList.Items.Add(type);
             }
+        }
+
+        private void SetType(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox typesList = (ComboBox)sender;
+            SelectedType = (string)typesList.SelectedItem;
+        }
+
+        private void SetFramework(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox frameworksList = (ComboBox)sender;
+            SelectedFramework = (string)frameworksList.SelectedItem;
         }
 
         private void Browse(object sender, RoutedEventArgs e)
@@ -50,15 +68,13 @@ namespace Ide
 
             if (dlg.ShowDialog() == true)
             {
-                LocationText.Text = dlg.FileName;
+                LocationBox.Text = dlg.FileName;
+                SelectedLocation = LocationBox.Text;
             }
         }
 
         private void Confirm(object sender, RoutedEventArgs e)
         {
-            if (ProjectName.Text == "")
-                ProjectName.Text = "Untitled";
-
             DialogResult = true;
         }
     }

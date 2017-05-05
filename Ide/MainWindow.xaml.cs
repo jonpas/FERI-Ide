@@ -35,41 +35,67 @@ namespace Ide
             // Create default projects directory if it doesn't exist yet
             string projectDir = Properties.Settings.Default.ProjectsDirectory;
             if (projectDir == "")
-                Properties.Settings.Default.ProjectsDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Ide Projects";
+                Properties.Settings.Default.ProjectsDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/" + Constants.ProjectsFolder;
 
             if (!Directory.Exists(Properties.Settings.Default.ProjectsDirectory))
                 Directory.CreateDirectory(Properties.Settings.Default.ProjectsDirectory);
 
             // Load settings
             TextEditor.TextWrapping = (TextWrapping)Properties.Settings.Default.TextWrap;
-            //TODO Save and load project structure
+
+            // Load cache
+            if (File.Exists(Constants.CacheFile))
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(Cache));
+                using (TextReader reader = new StreamReader(Constants.CacheFile))
+                {
+                    try
+                    {
+                        Cache cache = (Cache)serializer.Deserialize(reader);
+                        List<OpenProject> openProjects = cache.OpenProjects;
+                        foreach (var openProj in openProjects)
+                        {
+                            // Read project file for properties if one exists
+                            if (File.Exists(openProj.ProjectFileLocation))
+                            {
+                                XmlSerializer serializerProj = new XmlSerializer(typeof(Project));
+                                using (TextReader readerProj = new StreamReader(openProj.ProjectFileLocation))
+                                {
+                                    try
+                                    {
+                                        Project proj = (Project)serializerProj.Deserialize(readerProj);
+                                        // Create new project with defined path (project file does not contain location)
+                                        Projects.Add(new Project(openProj.Location, proj.ProjectFile, proj.Language, proj.Type, proj.Framework, proj.IgnoredItems));
+                                    }
+                                    catch
+                                    {
+                                        //TODO Write to pop-up
+                                        Console.WriteLine("Error! Project failed deserializing!");
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                //TODO Error pop-up
+                                Console.WriteLine("Error! No project file!");
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        //TODO Write to pop-up
+                        Console.WriteLine("Error! Cache failed deserializing!");
+                    }
+                }
+            }
 
             // Set binding sources
             ProjectTree.ItemsSource = Projects;
             MethodList.ItemsSource = Methods;
 
-
             //TEST
-            Projects.Add(new Project(Properties.Settings.Default.ProjectsDirectory, "C#", "Code", "WPF"));
-
-
-            // Load cache
-            //XmlSerializer serializer = new XmlSerializer(typeof(Cache));
-            //if (File.Exists("Cache.xml"))
-            //{
-            //    using (TextReader reader = new StreamReader("Cache.xml"))
-            //    {
-            //        try
-            //        {
-            //            Cache cache = (Cache)serializer.Deserialize(reader);
-            //            TextEditor.TextWrapping = cache.WordWrap;
-            //        }
-            //        catch
-            //        {
-            //            Console.WriteLine("Error! Cache failed deserializing!");
-            //        }
-            //    }
-            //}
+            //Projects.Add(new Project(Properties.Settings.Default.ProjectsDirectory, "Ide.proj.xml", "C#", "Code", "WPF"));
+            //Projects.Add(new Project(Properties.Settings.Default.ProjectsDirectory, "Project.xml", "C++", "Code", "WPF"));
         }
 
         private void Exit(object sender, RoutedEventArgs e)
@@ -77,49 +103,23 @@ namespace Ide
             Application.Current.Shutdown();
         }
 
-        private TreeViewItem CreateProjectItem(TreeViewItem parent, string path, bool folder)
-        {
-            return null;
-        }
-
-        private void CreateProjectTree(TreeViewItem parent, string parentDir)
-        {
-            foreach (var dir in Directory.GetDirectories(parentDir))
-            {
-                TreeViewItem dirItem = CreateProjectItem(parent, dir, true);
-                CreateProjectTree(dirItem, dir);
-            }
-
-            foreach (var file in Directory.GetFiles(parentDir))
-            {
-                CreateProjectItem(parent, file, false);
-            }
-        }
-
         private void CreateProject(object sender, RoutedEventArgs e)
         {
-            CreateProjectWindow newProject = new CreateProjectWindow();
+            CreateProjectWindow newProjWin = new CreateProjectWindow();
 
-            if (newProject.ShowDialog() == true)
+            if (newProjWin.ShowDialog() == true)
             {
-                StackPanel holder = new StackPanel();
-                holder.Orientation = Orientation.Horizontal;
+                string projectFolder = System.IO.Path.GetDirectoryName(newProjWin.SelectedLocation);
+                string projectFile = System.IO.Path.GetFileName(newProjWin.SelectedLocation);
+                Project newProj = new Project(projectFolder, projectFile, newProjWin.SelectedLanguage, newProjWin.SelectedType, newProjWin.SelectedFramework);
 
-                Image img = new Image() { Source = new BitmapImage(new Uri("Resources/FileTypes/ProjectFolderOpen_16x.png", UriKind.Relative)) };
-                holder.Children.Add(img);
-                TextBlock fileName = new TextBlock() { Text = "Project '" + newProject.ProjectName.Text + "'", Margin = new Thickness(5, 0, 0, 0) };
-                holder.Children.Add(fileName);
+                XmlSerializer serializer = new XmlSerializer(typeof(Project));
+                using (FileStream newProjFile = File.Create(newProjWin.SelectedLocation))
+                {
+                    serializer.Serialize(newProjFile, newProj);
+                }
 
-                TreeViewItem projectItem = new TreeViewItem();
-                projectItem.Tag = "Project";
-                projectItem.Header = holder;
-                projectItem.FontWeight = FontWeights.Bold;
-                ProjectTree.Items.Add(projectItem);
-                projectItem.ExpandSubtree();
-
-                CreateProjectTree(projectItem, newProject.LocationText.Text + "/..");
-
-                //TODO: Save project path for later use
+                Projects.Add(newProj);
             }
         }
 
@@ -138,7 +138,7 @@ namespace Ide
                     {
                         FileItem selectedItem = (FileItem)ProjectTree.SelectedItem;
                         selectedItem.Name = newName;
-                        
+
                     }
                     else if (ProjectTree.SelectedItem.GetType() == typeof(FolderItem))
                     {
@@ -171,9 +171,12 @@ namespace Ide
             }
 
             TabItem tab = (TabItem)TextEditor.Parent;
-            tab.Content = "";
-            tab.Header = "No File";
-            tab.FontStyle = FontStyles.Italic;
+            if (tab != null)
+            {
+                tab.Content = "";
+                tab.Header = "No File";
+                tab.FontStyle = FontStyles.Italic;
+            }
         }
 
         private void CreateFileFolder(object sender, RoutedEventArgs e)
@@ -186,14 +189,41 @@ namespace Ide
                 string fileName = input.Input.Text;
                 if (fileName == "")
                     fileName = "Untitled.txt"; // Default name
-                else if (!fileName.Contains("."))
-                    fileName += ".txt"; // Default extension
 
-                //TODO: Add under (folder selected) or next (item selected) to currently selected item
-                //TODO: Check if file already exists
+                string location = "";
 
-                CreateProjectItem((TreeViewItem)ProjectTree.Items.GetItemAt(0), fileName, false);
-                TextEditor.Text = "/* Default text */";
+                if (ProjectTree.SelectedItem.GetType() == typeof(FileItem))
+                {
+                    FileItem selectedItem = (FileItem)ProjectTree.SelectedItem;
+                    if (selectedItem.ContainingFolder != null)
+                    {
+                        location = selectedItem.ContainingFolder.Location;
+                        selectedItem.ContainingFolder.AddFile(fileName);
+                    }
+                    else
+                    {
+                        location = selectedItem.ContainingProject.Location;
+                        selectedItem.ContainingProject.AddFile(fileName);
+                    }
+                }
+                else if (ProjectTree.SelectedItem.GetType() == typeof(FolderItem))
+                {
+                    FolderItem selectedItem = (FolderItem)ProjectTree.SelectedItem;
+                    if (selectedItem.ContainingFolder != null)
+                        location = selectedItem.ContainingFolder.Location;
+                    else
+                        location = selectedItem.ContainingProject.Location;
+                    selectedItem.AddFile(fileName);
+                }
+                else
+                {
+                    Project selectedItem = (Project)ProjectTree.SelectedItem;
+                    location = selectedItem.Location;
+                    selectedItem.AddFile(fileName);
+                }
+
+                location += "/" + fileName;
+                File.WriteAllText(location, "/* Default text */");
             }
         }
 
@@ -223,9 +253,10 @@ namespace Ide
             // Remove previous items
             Methods.Clear();
 
-            if (e.NewValue != null && e.NewValue.GetType() == typeof(FileInfo))
+            if (e.NewValue != null && e.NewValue.GetType() == typeof(FileItem))
             {
-                FileInfo selectedItem = (FileInfo)e.NewValue;
+                FileItem selectedItemFile = (FileItem)e.NewValue;
+                FileInfo selectedItem = selectedItemFile.Info;
 
                 TabItem tab = (TabItem)TextEditor.Parent;
                 Regex regex = new Regex(@"(private|protected|public) (.+?)\)");
@@ -250,7 +281,7 @@ namespace Ide
                             {
                                 if (match.Groups[2] != null)
                                 {
-                                    Methods.Add(new Method(match.Groups[1].Value, match.Groups[2].Value, selectedItem)); // 1: type, 2: 
+                                    Methods.Add(new Method(match.Groups[1].Value, match.Groups[2].Value + ")", selectedItem)); // 1: type, 2: signature
                                 }
                             }
                         }
@@ -311,13 +342,13 @@ namespace Ide
             Properties.Settings.Default.TextWrap = (int)TextEditor.TextWrapping;
             Properties.Settings.Default.Save();
 
-            // Save to cache
-            //XmlSerializer serializer = new XmlSerializer(typeof(Cache));
-            //using (TextWriter writer = new StreamWriter("Cache.xml"))
-            //{
-            //    Cache cache = new Cache(TextEditor.TextWrapping);
-            //    serializer.Serialize(writer, cache);
-            //}
+            // Save cache
+            XmlSerializer serializer = new XmlSerializer(typeof(Cache));
+            using (TextWriter writer = new StreamWriter(Constants.CacheFile))
+            {
+                Cache cache = new Cache(Projects);
+                serializer.Serialize(writer, cache);
+            }
         }
     }
 }

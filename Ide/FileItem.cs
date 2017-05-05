@@ -41,17 +41,17 @@ namespace Ide
         }
         private ObservableCollection<FileItem> _containingCollection;
 
+        public Project ContainingProject { get; set; }
 
-        public FileItem(FileInfo file, ObservableCollection<FileItem> containingCollection)
+        public FolderItem ContainingFolder { get; set; }
+
+
+        public FileItem(FileInfo file, ObservableCollection<FileItem> containingCollection, Project containingProject, FolderItem containingFolder)
         {
             Info = file;
             ContainingCollection = containingCollection;
-        }
-
-        public FileItem(string path, ObservableCollection<FileItem> containingCollection)
-        {
-            Info = new FileInfo(path);
-            ContainingCollection = containingCollection;
+            ContainingProject = containingProject;
+            ContainingFolder = containingFolder;
         }
     }
 }

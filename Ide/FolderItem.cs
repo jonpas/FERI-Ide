@@ -16,7 +16,7 @@ namespace Ide
         public event PropertyChangedEventHandler PropertyChanged;
 
         public DirectoryInfo Info { get; set; }
-   
+
         public string Name
         {
             get { return Info.Name; }
@@ -25,6 +25,11 @@ namespace Ide
                 Info.MoveTo(Info.Parent.FullName + "/" + value);
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
             }
+        }
+
+        public string Location
+        {
+            get { return Info.FullName; }
         }
 
         public IList Children
@@ -36,17 +41,17 @@ namespace Ide
                 var subDirItems = new ObservableCollection<FolderItem>();
                 foreach (var dir in Info.GetDirectories())
                 {
-                    subDirItems.Add(new FolderItem(dir, subDirItems));
+                    subDirItems.Add(new FolderItem(dir, subDirItems, ContainingProject, this));
                 }
 
                 children.Add(new CollectionContainer { Collection = subDirItems });
 
-                var fileItems = new ObservableCollection<FileItem>();
+                FilesCollection = new ObservableCollection<FileItem>();
                 foreach (var file in Info.GetFiles())
                 {
-                    fileItems.Add(new FileItem(file, fileItems));
+                    FilesCollection.Add(new FileItem(file, FilesCollection, ContainingProject, this));
                 }
-                children.Add(new CollectionContainer { Collection = fileItems });
+                children.Add(new CollectionContainer { Collection = FilesCollection });
 
                 return children;
             }
@@ -63,17 +68,24 @@ namespace Ide
         }
         private ObservableCollection<FolderItem> _containingCollection;
 
+        public Project ContainingProject { get; set; }
 
-        public FolderItem(DirectoryInfo dir, ObservableCollection<FolderItem> containingCollection)
+        public FolderItem ContainingFolder { get; set; }
+
+        public ObservableCollection<FileItem> FilesCollection { get; set; }
+
+
+        public FolderItem(DirectoryInfo dir, ObservableCollection<FolderItem> containingCollection, Project containingProject, FolderItem containingFolder)
         {
             Info = dir;
             ContainingCollection = containingCollection;
+            ContainingProject = containingProject;
+            ContainingFolder = containingFolder;
         }
 
-        public FolderItem(string path, ObservableCollection<FolderItem> containingCollection)
+        public void AddFile(string fileName)
         {
-            Info = new DirectoryInfo(path);
-            ContainingCollection = containingCollection;
+            FilesCollection.Add(new FileItem(new FileInfo(Location + "/" + fileName), FilesCollection, ContainingProject, null));
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,19 +12,40 @@ namespace Ide
 {
     public class Cache
     {
-        public Cache()
+        public List<OpenProject> OpenProjects { get; set; }
+
+
+        private Cache() { }
+
+        public Cache(ObservableCollection<Project> projects)
         {
-            WordWrap = TextWrapping.NoWrap;
+            OpenProjects = new List<OpenProject>();
+            foreach (var proj in projects)
+            {
+                OpenProjects.Add(new OpenProject(proj.Location, proj.ProjectFile));
+            }
+        }
+    }
+
+    public class OpenProject
+    {
+        public string Location { get; set; }
+
+        public string ProjectFile { get; set; }
+
+        [XmlIgnore]
+        public string ProjectFileLocation
+        {
+            get { return Location + "/" + ProjectFile; }
         }
 
-        public Cache(TextWrapping wordWrap)
+
+        public OpenProject() { }
+
+        public OpenProject(string location, string projFile)
         {
-            WordWrap = wordWrap;
+            Location = location;
+            ProjectFile = projFile;
         }
-
-        //public TreeView ProjectTree { get; set; }
-        //public ListView MethodList { get; set; }
-
-        public TextWrapping WordWrap { get; set; }
     }
 }

@@ -57,6 +57,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Cache.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="Controls\ProjectStructure.xaml.cs">
       <DependentUpon>ProjectStructure.xaml</DependentUpon>
     </Compile>
@@ -193,6 +194,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Logo\Logo.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Rename_16x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

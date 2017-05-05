@@ -15,14 +15,18 @@
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Vertical">
-            <Label Content="Project Name:"/>
-            <TextBox Name="ProjectName" Margin="5,0,5,0"/>
+            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                <Label Content="Project File Location:"/>
+                <Button Content="Browse" Padding="5,0,5,0" Click="Browse"/>
+            </StackPanel>
+            <TextBox Name="LocationBox" IsEnabled="False" Margin="5,5,5,0"/>
+            <!-- Disabled as SaveFileDialog handles .xml requirement -->
 
             <Label Content="Language:"/>
-            <ComboBox Name="LanguagesList" Margin="5,0,5,0" ItemsSource="{Binding Source={x:Static properties:Settings.Default}, Path=Languages}" SelectionChanged="ListTypes"/>
+            <ComboBox Name="LanguagesList" Margin="5,0,5,0" ItemsSource="{Binding Source={x:Static properties:Settings.Default}, Path=Languages}" SelectionChanged="SetLanguage"/>
 
             <Label Content="Type:"/>
-            <ComboBox Name="TypesList" Margin="5,0,5,0">
+            <ComboBox Name="TypesList" Margin="5,0,5,0" SelectionChanged="SetType">
                 <ComboBox.Style>
                     <Style TargetType="{x:Type ComboBox}">
                         <Style.Triggers>
@@ -35,17 +39,27 @@
             </ComboBox>
 
             <Label Content="Framework:"/>
-            <ComboBox Margin="5,0,5,0" ItemsSource="{Binding Source={x:Static properties:Settings.Default}, Path=Frameworks}"/>
-
-            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                <Label Content="Project File Location:"/>
-                <Button Content="Browse" Padding="5,0,5,0" Click="Browse"/>
-            </StackPanel>
-            <TextBox Name="LocationText" IsEnabled="False" Margin="5,5,5,0"/>  <!-- Disabled as SaveFileDialog handles .xml requirement -->
+            <ComboBox Name="FrameworksList" Margin="5,0,5,0" ItemsSource="{Binding Source={x:Static properties:Settings.Default}, Path=Frameworks}" SelectionChanged="SetFramework"/>
         </StackPanel>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,5,0,5">
-            <Button Content="Add" IsDefault="True" Width="75" Margin="0,0,10,0" Padding="5,0,5,0" Click="Confirm"/>
+            <Button Content="Add" IsDefault="True" Width="75" Margin="0,0,10,0" Padding="5,0,5,0" Click="Confirm">
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=LanguagesList, Path=SelectedItem}" Value="{x:Null}">
+                                <Setter Property="IsEnabled" Value="False"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=TypesList, Path=SelectedItem}" Value="{x:Null}">
+                                <Setter Property="IsEnabled" Value="False"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=FrameworksList, Path=SelectedItem}" Value="{x:Null}">
+                                <Setter Property="IsEnabled" Value="False"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
             <Button Content="Cancel" IsCancel="True" Width="75" Padding="5,0,5,0"/>
         </StackPanel>
     </Grid>
