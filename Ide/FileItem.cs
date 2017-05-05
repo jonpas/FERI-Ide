@@ -53,5 +53,13 @@ namespace Ide
             ContainingProject = containingProject;
             ContainingFolder = containingFolder;
         }
+
+        public FileItem(string path, ObservableCollection<FileItem> containingCollection, Project containingProject, FolderItem containingFolder)
+        {
+            Info = new FileInfo(path);
+            ContainingCollection = containingCollection;
+            ContainingProject = containingProject;
+            ContainingFolder = containingFolder;
+        }
     }
 }

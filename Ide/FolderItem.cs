@@ -38,13 +38,12 @@ namespace Ide
             {
                 var children = new CompositeCollection();
 
-                var subDirItems = new ObservableCollection<FolderItem>();
+                FoldersCollection = new ObservableCollection<FolderItem>();
                 foreach (var dir in Info.GetDirectories())
                 {
-                    subDirItems.Add(new FolderItem(dir, subDirItems, ContainingProject, this));
+                    FoldersCollection.Add(new FolderItem(dir, FoldersCollection, ContainingProject, this));
                 }
-
-                children.Add(new CollectionContainer { Collection = subDirItems });
+                children.Add(new CollectionContainer { Collection = FoldersCollection });
 
                 FilesCollection = new ObservableCollection<FileItem>();
                 foreach (var file in Info.GetFiles())
@@ -72,6 +71,8 @@ namespace Ide
 
         public FolderItem ContainingFolder { get; set; }
 
+        public ObservableCollection<FolderItem> FoldersCollection { get; set; }
+
         public ObservableCollection<FileItem> FilesCollection { get; set; }
 
 
@@ -83,9 +84,26 @@ namespace Ide
             ContainingFolder = containingFolder;
         }
 
+        public FolderItem(string path, ObservableCollection<FolderItem> containingCollection, Project containingProject, FolderItem containingFolder)
+        {
+            Info = new DirectoryInfo(path);
+            ContainingCollection = containingCollection;
+            ContainingProject = containingProject;
+            ContainingFolder = containingFolder;
+        }
+
         public void AddFile(string fileName)
         {
-            FilesCollection.Add(new FileItem(new FileInfo(Location + "/" + fileName), FilesCollection, ContainingProject, null));
+            string path = Location + "/" + fileName;
+            File.WriteAllText(path, "/* Default text */");
+            FilesCollection.Add(new FileItem(path, FilesCollection, ContainingProject, null));
+        }
+
+        public void AddFolder(string folderName)
+        {
+            string path = Location + "/" + folderName;
+            Directory.CreateDirectory(path);
+            FoldersCollection.Add(new FolderItem(path, FoldersCollection, ContainingProject, null));
         }
     }
 }

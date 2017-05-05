@@ -25,6 +25,7 @@
             <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
 
+        <!--TODO Cleanup duplicate markup in Menu and ToolBar-->
         <!--Menu-->
         <StackPanel Grid.ColumnSpan="3">
             <Menu>
@@ -32,6 +33,11 @@
                     <MenuItem Header="Create Project..."  Click="CreateProject">
                         <MenuItem.Icon>
                             <Image Source="Resources/NewFileCollection_16x.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Open Project" Click="OpenProject">
+                        <MenuItem.Icon>
+                            <Image Source="Resources/OpenFileFromProject_16x.png" Style="{StaticResource EnableDisableImageStyle}"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Header="Close Project" Click="CloseProject">
@@ -50,17 +56,40 @@
                         </MenuItem.Icon>
                     </MenuItem>
                     <Separator/>
-                    <MenuItem Header="Save Current File">
+                    <MenuItem Header="{Binding ElementName=ProjectTree, Path=SelectedValue.Name}" HeaderStringFormat="Save {0}">
+                        <!--TODO Use current open tab-->
+                        <MenuItem.Style>
+                            <Style TargetType="{x:Type MenuItem}">
+                                <Setter Property="IsEnabled" Value="False"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=ProjectTree, Path=SelectedItem, Converter={StaticResource TypeOfConverter}}" Value="{x:Type local:FileItem}">
+                                        <Setter Property="IsEnabled" Value="True"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </MenuItem.Style>
                         <MenuItem.Icon>
-                            <Image Source="Resources/Save_16x.png"/>
+                            <Image Source="Resources/Save_16x.png" Style="{StaticResource EnableDisableImageStyle}"/>
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Header="Save Current File As...">
+                    <MenuItem Header="{Binding ElementName=ProjectTree, Path=SelectedValue.Name}" HeaderStringFormat="Save {0} As...">
+                        <!--TODO Use current open tab-->
+                        <MenuItem.Style>
+                            <Style TargetType="{x:Type MenuItem}">
+                                <Setter Property="IsEnabled" Value="False"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=ProjectTree, Path=SelectedItem, Converter={StaticResource TypeOfConverter}}" Value="{x:Type local:FileItem}">
+                                        <Setter Property="IsEnabled" Value="True"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </MenuItem.Style>
                         <MenuItem.Icon>
-                            <Image Source="Resources/SaveAs_16x.png"/>
+                            <Image Source="Resources/SaveAs_16x.png" Style="{StaticResource EnableDisableImageStyle}"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Header="Save All">
+                        <!--TODO Implement-->
                         <MenuItem.Icon>
                             <Image Source="Resources/SaveAll_16x.png"/>
                         </MenuItem.Icon>
@@ -75,11 +104,13 @@
 
                 <MenuItem Header="Edit">
                     <MenuItem Header="Undo">
+                        <!--TODO Implement-->
                         <MenuItem.Icon>
                             <Image Source="Resources/Undo_16x.png"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Header="Redo">
+                        <!--TODO Implement-->
                         <MenuItem.Icon>
                             <Image Source="Resources/Redo_16x.png"/>
                         </MenuItem.Icon>
@@ -91,7 +122,8 @@
                 </MenuItem>
 
                 <MenuItem Header="Tools">
-                    <MenuItem Header="Build" IsEnabled="False" Opacity="0.25">
+                    <MenuItem Header="Build" Opacity="0.25">
+                        <!--TODO Implement-->
                         <MenuItem.Icon>
                             <Image Source="Resources/BuildSolution_16x.png"/>
                         </MenuItem.Icon>
@@ -106,6 +138,7 @@
             </Menu>
 
             <!--Tool Bar-->
+            <!--TODO Remember ToolBar positions on ToolBarTray-->
             <ToolBarTray>
                 <ToolBar>
                     <Button Click="CreateFileFolder">
@@ -118,9 +151,9 @@
                                 </Style.Triggers>
                             </Style>
                         </Button.Style>
-                        <Image Source="Resources/NewFile_16x.png" ToolTip="New Item" Style="{StaticResource EnableDisableImageStyle}"/>
+                        <Image Source="Resources/NewFile_16x.png" ToolTip="New File" Style="{StaticResource EnableDisableImageStyle}"/>
                     </Button>
-                    <!--<Button Click="CreateFileFolder">
+                    <Button Click="CreateFileFolder" Tag="Folder">
                         <Button.Style>
                             <Style TargetType="{x:Type Button}">
                                 <Style.Triggers>
@@ -130,8 +163,8 @@
                                 </Style.Triggers>
                             </Style>
                         </Button.Style>
-                        <Image Source="Resources/NewFile_16x.png" ToolTip="New Item" Style="{StaticResource EnableDisableImageStyle}"/> TODO NewFolder image
-                    </Button>-->
+                        <Image Source="Resources/NewSolutionFolder_16x.png" ToolTip="New Folder" Style="{StaticResource EnableDisableImageStyle}"/>
+                    </Button>
                     <Button Click="RenameFileFolderProject">
                         <Button.Style>
                             <Style TargetType="{x:Type Button}">
@@ -160,19 +193,41 @@
                         </Button.Style>
                         <Image Source="Resources/NoResults_16x.png" ToolTip="Remove Item" Style="{StaticResource EnableDisableImageStyle}"/>
                     </Button>
-                    <Separator/>
+                </ToolBar>
+                <ToolBar>
                     <Button>
-                        <Image Source="Resources/Save_16x.png" ToolTip="Save"/>
+                        <Image Source="Resources/OpenFolder_16x.png" ToolTip="Open File"/>
+                    </Button>
+                    <Button DataContext="{Binding ElementName=ProjectTree}">
+                        <Image Source="Resources/Save_16x.png" Style="{StaticResource EnableDisableImageStyle}">
+                            <Image.ToolTip>
+                                <ToolTip Content="{Binding Path=SelectedValue.Name}" ContentStringFormat="Save {0}"/>
+                                <!--TODO Use current open tab-->
+                            </Image.ToolTip>
+                        </Image>
+                        <Button.Style>
+                            <Style TargetType="{x:Type Button}">
+                                <Setter Property="IsEnabled" Value="False"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=ProjectTree, Path=SelectedItem, Converter={StaticResource TypeOfConverter}}" Value="{x:Type local:FileItem}">
+                                        <Setter Property="IsEnabled" Value="True"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
                     </Button>
                     <Button>
                         <Image Source="Resources/SaveAll_16x.png" ToolTip="Save All"/>
                     </Button>
-                    <Separator/>
+                </ToolBar>
+                <ToolBar>
                     <Button>
                         <Image Source="Resources/Undo_16x.png" ToolTip="Undo"/>
+                        <!--TODO Implement-->
                     </Button>
                     <Button>
                         <Image Source="Resources/Redo_16x.png" ToolTip="Redo"/>
+                        <!--TODO Implement-->
                     </Button>
                 </ToolBar>
                 <!--More toolbars here that can be moved around by user-->

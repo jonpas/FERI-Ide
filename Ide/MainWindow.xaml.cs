@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -55,30 +56,7 @@ namespace Ide
                         List<OpenProject> openProjects = cache.OpenProjects;
                         foreach (var openProj in openProjects)
                         {
-                            // Read project file for properties if one exists
-                            if (File.Exists(openProj.ProjectFileLocation))
-                            {
-                                XmlSerializer serializerProj = new XmlSerializer(typeof(Project));
-                                using (TextReader readerProj = new StreamReader(openProj.ProjectFileLocation))
-                                {
-                                    try
-                                    {
-                                        Project proj = (Project)serializerProj.Deserialize(readerProj);
-                                        // Create new project with defined path (project file does not contain location)
-                                        Projects.Add(new Project(openProj.Location, proj.ProjectFile, proj.Language, proj.Type, proj.Framework, proj.IgnoredItems));
-                                    }
-                                    catch
-                                    {
-                                        //TODO Write to pop-up
-                                        Console.WriteLine("Error! Project failed deserializing!");
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                //TODO Error pop-up
-                                Console.WriteLine("Error! No project file!");
-                            }
+                            ReadProject(openProj.ProjectFileLocation, openProj.Location);
                         }
                     }
                     catch
@@ -103,6 +81,33 @@ namespace Ide
             Application.Current.Shutdown();
         }
 
+        private void ReadProject(string projFilePath, string dir)
+        {
+            if (File.Exists(projFilePath))
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(Project));
+                using (TextReader reader = new StreamReader(projFilePath))
+                {
+                    try
+                    {
+                        Project proj = (Project)serializer.Deserialize(reader);
+                        // Create new project with defined path (project file does not contain location)
+                        Projects.Add(new Project(dir, proj.ProjectFile, proj.Language, proj.Type, proj.Framework, proj.IgnoredItems));
+                    }
+                    catch
+                    {
+                        //TODO Write to pop-up
+                        Console.WriteLine("Error! Project failed deserializing!");
+                    }
+                }
+            }
+            else
+            {
+                //TODO Error pop-up
+                Console.WriteLine("Error! No project file!");
+            }
+        }
+
         private void CreateProject(object sender, RoutedEventArgs e)
         {
             CreateProjectWindow newProjWin = new CreateProjectWindow();
@@ -123,38 +128,15 @@ namespace Ide
             }
         }
 
-        private void RenameFileFolderProject(object sender, RoutedEventArgs e)
+        private void OpenProject(object sender, RoutedEventArgs e)
         {
-            InputWindow input = new InputWindow();
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.InitialDirectory = Properties.Settings.Default.ProjectsDirectory;
+            dlg.Filter = "Text documents (.xml)|*.xml"; // Filter files by extension
 
-            if (input.ShowDialog() == true)
+            if (dlg.ShowDialog() == true)
             {
-                string newName = input.Input.Text;
-
-                //TODO: Check if folder of same name already exists
-                if (newName != "")
-                {
-                    if (ProjectTree.SelectedItem.GetType() == typeof(FileItem))
-                    {
-                        FileItem selectedItem = (FileItem)ProjectTree.SelectedItem;
-                        selectedItem.Name = newName;
-
-                    }
-                    else if (ProjectTree.SelectedItem.GetType() == typeof(FolderItem))
-                    {
-                        FolderItem selectedItem = (FolderItem)ProjectTree.SelectedItem;
-                        selectedItem.Name = newName;
-                    }
-                    else
-                    {
-                        Project selectedProject = (Project)ProjectTree.SelectedItem;
-                        selectedProject.Name = newName;
-                    }
-                }
-                else
-                {
-                    //TODO Show invalid name message
-                }
+                ReadProject(dlg.FileName, System.IO.Path.GetDirectoryName(dlg.FileName));
             }
         }
 
@@ -182,53 +164,92 @@ namespace Ide
         private void CreateFileFolder(object sender, RoutedEventArgs e)
         {
             InputWindow input = new InputWindow();
-            //TODO Add creating folders
-
             if (input.ShowDialog() == true)
             {
                 string fileName = input.Input.Text;
                 if (fileName == "")
                     fileName = "Untitled.txt"; // Default name
 
-                string location = "";
+                Button button = (Button)sender;
+                bool wantedFolder = (string)button.Tag == "Folder";
 
+                //TODO Cleanup
+                //TODO Handle cannot create exceptions (in Project and FolderItem classes)
                 if (ProjectTree.SelectedItem.GetType() == typeof(FileItem))
                 {
                     FileItem selectedItem = (FileItem)ProjectTree.SelectedItem;
                     if (selectedItem.ContainingFolder != null)
                     {
-                        location = selectedItem.ContainingFolder.Location;
-                        selectedItem.ContainingFolder.AddFile(fileName);
+                        if (wantedFolder)
+                            selectedItem.ContainingFolder.AddFolder(fileName);
+                        else
+                            selectedItem.ContainingFolder.AddFile(fileName);
                     }
                     else
                     {
-                        location = selectedItem.ContainingProject.Location;
-                        selectedItem.ContainingProject.AddFile(fileName);
+                        if (wantedFolder)
+                            selectedItem.ContainingProject.AddFolder(fileName);
+                        else
+                            selectedItem.ContainingProject.AddFile(fileName);
                     }
                 }
                 else if (ProjectTree.SelectedItem.GetType() == typeof(FolderItem))
                 {
                     FolderItem selectedItem = (FolderItem)ProjectTree.SelectedItem;
-                    if (selectedItem.ContainingFolder != null)
-                        location = selectedItem.ContainingFolder.Location;
+                    if (wantedFolder)
+                        selectedItem.AddFolder(fileName);
                     else
-                        location = selectedItem.ContainingProject.Location;
-                    selectedItem.AddFile(fileName);
+                        selectedItem.AddFile(fileName);
                 }
                 else
                 {
                     Project selectedItem = (Project)ProjectTree.SelectedItem;
-                    location = selectedItem.Location;
-                    selectedItem.AddFile(fileName);
+                    if (wantedFolder)
+                        selectedItem.AddFolder(fileName);
+                    else
+                        selectedItem.AddFile(fileName);
                 }
+            }
+        }
 
-                location += "/" + fileName;
-                File.WriteAllText(location, "/* Default text */");
+        private void RenameFileFolderProject(object sender, RoutedEventArgs e)
+        {
+            InputWindow input = new InputWindow();
+            if (input.ShowDialog() == true)
+            {
+                string newName = input.Input.Text;
+
+                //TODO: Check if folder of same name already exists
+                if (newName != "")
+                {
+                    //TODO Cleanup
+                    if (ProjectTree.SelectedItem.GetType() == typeof(FileItem))
+                    {
+                        FileItem selectedItem = (FileItem)ProjectTree.SelectedItem;
+                        selectedItem.Name = newName;
+
+                    }
+                    else if (ProjectTree.SelectedItem.GetType() == typeof(FolderItem))
+                    {
+                        FolderItem selectedItem = (FolderItem)ProjectTree.SelectedItem;
+                        selectedItem.Name = newName;
+                    }
+                    else
+                    {
+                        Project selectedProject = (Project)ProjectTree.SelectedItem;
+                        selectedProject.Name = newName;
+                    }
+                }
+                else
+                {
+                    //TODO Show invalid name message
+                }
             }
         }
 
         private void DeleteFileFolder(object sender, RoutedEventArgs e)
         {
+            //TODO Add confirmation dialog
             if (ProjectTree.SelectedItem.GetType() == typeof(FileItem))
             {
                 FileItem selectedItem = (FileItem)ProjectTree.SelectedItem;

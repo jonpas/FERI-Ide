@@ -53,13 +53,12 @@ namespace Ide
             {
                 var children = new CompositeCollection();
 
-                var subDirItems = new ObservableCollection<FolderItem>();
+                FoldersCollection = new ObservableCollection<FolderItem>();
                 foreach (var dir in Info.GetDirectories())
                 {
-                    subDirItems.Add(new FolderItem(dir, subDirItems, this, null));
+                    FoldersCollection.Add(new FolderItem(dir, FoldersCollection, this, null));
                 }
-
-                children.Add(new CollectionContainer { Collection = subDirItems });
+                children.Add(new CollectionContainer { Collection = FoldersCollection });
 
                 FilesCollection = new ObservableCollection<FileItem>();
                 foreach (var file in Info.GetFiles().Where(name => !IgnoredItems.Contains(name.Name)))
@@ -73,6 +72,9 @@ namespace Ide
         }
 
         [XmlIgnore]
+        public ObservableCollection<FolderItem> FoldersCollection { get; set; }
+
+        [XmlIgnore]
         public ObservableCollection<FileItem> FilesCollection { get; set; }
 
         [XmlArrayItem("Item")]
@@ -84,10 +86,10 @@ namespace Ide
         public Project(string path, string projectFile, string language, string type, string framework)
         {
             Info = new DirectoryInfo(path);
+            ProjectFile = projectFile;
             Language = language;
             Type = type;
             Framework = framework;
-            ProjectFile = projectFile;
 
             IgnoredItems = new List<string>();
             IgnoredItems.Add(projectFile);
@@ -96,10 +98,10 @@ namespace Ide
         public Project(string path, string projectFile, string language, string type, string framework, List<string> ignoredItems)
         {
             Info = new DirectoryInfo(path);
+            ProjectFile = projectFile;
             Language = language;
             Type = type;
             Framework = framework;
-            ProjectFile = projectFile;
 
             IgnoredItems = ignoredItems;
             IgnoredItems.Add(projectFile);
@@ -107,7 +109,16 @@ namespace Ide
 
         public void AddFile(string fileName)
         {
-            FilesCollection.Add(new FileItem(new FileInfo(Location + "/" + fileName), FilesCollection, this, null));
+            string path = Location + "/" + fileName;
+            File.WriteAllText(path, "/* Default text */");
+            FilesCollection.Add(new FileItem(path, FilesCollection, this, null));
+        }
+
+        public void AddFolder(string folderName)
+        {
+            string path = Location + "/" + folderName;
+            Directory.CreateDirectory(path);
+            FoldersCollection.Add(new FolderItem(path, FoldersCollection, this, null));
         }
     }
 }
