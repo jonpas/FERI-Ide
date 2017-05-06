@@ -11,8 +11,8 @@
     <Setting Name="Types" Type="System.Collections.Generic.List&lt;System.Collections.Generic.List&lt;string&gt;&gt;" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="TextWrap" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
+    <Setting Name="TextWrap" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="ProjectsDirectory" Type="System.String" Scope="User">
       <Value Profile="(Default)" />

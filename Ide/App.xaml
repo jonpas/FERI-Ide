@@ -6,7 +6,6 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <converters:InvertBoolConverter x:Key="InvertBoolConverter"/>
-        <converters:TextWrapConverter x:Key="TextWrapConverter"/>
         <converters:TypeOfConverter x:Key="TypeOfConverter"/>
 
         <Style x:Key="EnableDisableImageStyle" TargetType="{x:Type Image}">
