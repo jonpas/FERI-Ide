@@ -3,20 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Xml.Serialization;
 
 namespace Ide
@@ -81,9 +71,22 @@ namespace Ide
             Application.Current.Shutdown();
         }
 
+        private bool IsProjectOpen(string path)
+        {
+            path = path.TrimEnd(Path.DirectorySeparatorChar);
+            foreach (Project proj in Projects)
+            {
+                if (proj.Location == path)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private void ReadProject(string projFilePath, string dir)
         {
-            if (File.Exists(projFilePath))
+            if (File.Exists(projFilePath) && !IsProjectOpen(dir)) //TODO Check if project already open
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(Project));
                 using (TextReader reader = new StreamReader(projFilePath))
@@ -104,7 +107,7 @@ namespace Ide
             else
             {
                 //TODO Error pop-up
-                Console.WriteLine("Error! No project file!");
+                Console.WriteLine("Error! No project file or project already open!");
             }
         }
 
@@ -114,8 +117,8 @@ namespace Ide
 
             if (newProjWin.ShowDialog() == true)
             {
-                string projectFolder = System.IO.Path.GetDirectoryName(newProjWin.SelectedLocation);
-                string projectFile = System.IO.Path.GetFileName(newProjWin.SelectedLocation);
+                string projectFolder = Path.GetDirectoryName(newProjWin.SelectedLocation);
+                string projectFile = Path.GetFileName(newProjWin.SelectedLocation);
                 Project newProj = new Project(projectFolder, projectFile, newProjWin.SelectedLanguage, newProjWin.SelectedType, newProjWin.SelectedFramework);
 
                 XmlSerializer serializer = new XmlSerializer(typeof(Project));
@@ -136,7 +139,7 @@ namespace Ide
 
             if (dlg.ShowDialog() == true)
             {
-                ReadProject(dlg.FileName, System.IO.Path.GetDirectoryName(dlg.FileName));
+                ReadProject(dlg.FileName, Path.GetDirectoryName(dlg.FileName));
             }
         }
 
