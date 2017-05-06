@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using ICSharpCode.AvalonEdit;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -33,7 +34,7 @@ namespace Ide
                 Directory.CreateDirectory(Properties.Settings.Default.ProjectsDirectory);
 
             // Load settings
-            TextEditor.TextWrapping = (TextWrapping)Properties.Settings.Default.TextWrap;
+            TextEditor.WordWrap = Properties.Settings.Default.TextWrap;
 
             // Load cache
             if (File.Exists(Constants.CacheFile))
@@ -328,6 +329,7 @@ namespace Ide
 
                 TabItem tab = (TabItem)TextEditor.Parent;
 
+                //TODO Fix showing end of the method
                 Regex regex = new Regex(method.Replace("(", @"\(").Replace(")", @"\)") + @"[^{]*.\n([^}]*)}");
 
                 MatchCollection matches;
@@ -398,7 +400,7 @@ namespace Ide
         private void Exit(object sender, System.ComponentModel.CancelEventArgs e)
         {
             // Save settings
-            Properties.Settings.Default.TextWrap = (int)TextEditor.TextWrapping;
+            Properties.Settings.Default.TextWrap = TextEditor.WordWrap;
             Properties.Settings.Default.Save();
 
             // Save cache

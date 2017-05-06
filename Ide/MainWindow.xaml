@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Ide"
+        xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
         mc:Ignorable="d"
         Title="Ide IDE"
         MinWidth="600" MinHeight="400"
@@ -121,7 +122,7 @@
                 </MenuItem>
 
                 <MenuItem Header="View">
-                    <MenuItem Header="Word Wrap" IsCheckable="True" IsChecked="{Binding ElementName=TextEditor, Path=TextWrapping, Converter={StaticResource TextWrapConverter}}"/>
+                    <MenuItem Header="Word Wrap" IsCheckable="True" IsChecked="{Binding ElementName=TextEditor, Path=WordWrap}"/>
                 </MenuItem>
 
                 <MenuItem Header="Tools">
@@ -336,7 +337,8 @@
         <!--Text Editor-->
         <TabControl Grid.Column="2" Grid.Row="1" Grid.RowSpan="3" BorderThickness="0,1,0,0">
             <TabItem Header="No File" FontStyle="Italic">
-                <TextBox Name="TextEditor" FontStyle="Normal" BorderThickness="0" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Auto" AcceptsReturn="True" AcceptsTab="True"/>
+                <!--TODO Dynamically set SyntaxHighlighting based on file extension-->
+                <avalonedit:TextEditor Name="TextEditor" FontFamily="Consolas" FontSize="10pt" FontStyle="Normal" SyntaxHighlighting="C#"/>
             </TabItem>
         </TabControl>
 
