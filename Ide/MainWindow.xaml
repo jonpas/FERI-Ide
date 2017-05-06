@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Ide"
-        xmlns:localc="clr-namespace:Ide.Controls"
         mc:Ignorable="d"
         Title="Ide IDE"
         MinWidth="600" MinHeight="400"
@@ -15,7 +14,6 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -241,13 +239,13 @@
 
         <!--Project Structure-->
         <!--TODO Move to User Control-->
-        <!--<localc:ProjectStructure Grid.Row="1" Grid.RowSpan="3"></localc:ProjectStructure>-->
+        <local:ProjectStructure x:Name="ProjStruct" Grid.Row="1" Grid.RowSpan="3"></local:ProjectStructure>
 
         <!--Folder Structure View-->
-        <TreeView Grid.Row="1" Name="ProjectTree" BorderThickness="0" SelectedItemChanged="ProjectItemSelected">
-            <!--TODO Sort with CollectionViewSource-->
+        <!--<TreeView Grid.Row="1" Name="ProjectTree" BorderThickness="0" SelectedItemChanged="ProjectItemSelected">
+            --><!--TODO Sort with CollectionViewSource--><!--
             <TreeView.Resources>
-                <!--Project-->
+                --><!--Project--><!--
                 <HierarchicalDataTemplate DataType="{x:Type local:Project}" ItemsSource="{Binding FilesFolders}">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="Resources/FileTypes/ProjectFolderOpen_16x.png"/>
@@ -255,7 +253,7 @@
                     </StackPanel>
                 </HierarchicalDataTemplate>
 
-                <!--Folders inside project directory-->
+                --><!--Folders inside project directory--><!--
                 <HierarchicalDataTemplate DataType="{x:Type local:FolderItem}" ItemsSource="{Binding Children}">
                     <StackPanel Orientation="Horizontal">
                         <Image Name="ProjectTreeFolderImage" Source="Resources/FileTypes/Folder_16x.png"/>
@@ -269,7 +267,7 @@
                     </HierarchicalDataTemplate.Triggers>
                 </HierarchicalDataTemplate>
 
-                <!--Files inside project directory-->
+                --><!--Files inside project directory--><!--
                 <DataTemplate DataType="{x:Type local:FileItem}">
                     <StackPanel Orientation="Horizontal">
                         <Image>
@@ -300,14 +298,14 @@
                     </StackPanel>
                 </DataTemplate>
             </TreeView.Resources>
-        </TreeView>
+        </TreeView>-->
 
         <!--Resize Splitters-->
         <GridSplitter Grid.Row="1" Grid.Column="1" Grid.RowSpan="3" Width="2" HorizontalAlignment="Stretch" Background="LightGray"/>
-        <GridSplitter Grid.Row="2" Height="2" HorizontalAlignment="Stretch" Background="LightGray"/>
+        <!--<GridSplitter Grid.Row="2" Height="2" HorizontalAlignment="Stretch" Background="LightGray"/>-->
 
         <!--Method List View-->
-        <ListView Name="MethodList" Grid.Row="3" BorderThickness="0" SelectionChanged="MethodSelected">
+        <!--<ListView Name="MethodList" Grid.Row="3" BorderThickness="0" SelectionChanged="MethodSelected">
             <ListView.Resources>
                 <DataTemplate DataType="{x:Type local:Method}">
                     <StackPanel Orientation="Horizontal">
@@ -333,7 +331,7 @@
                     </StackPanel>
                 </DataTemplate>
             </ListView.Resources>
-        </ListView>
+        </ListView>-->
 
         <!--Text Editor-->
         <TabControl Grid.Column="2" Grid.Row="1" Grid.RowSpan="3" BorderThickness="0,1,0,0">
@@ -343,7 +341,7 @@
         </TabControl>
 
         <!--Status Bar-->
-        <StatusBar Grid.Row="4" Grid.ColumnSpan="3">
+        <StatusBar Grid.Row="3" Grid.ColumnSpan="3">
             <StatusBarItem Content="Status:"/>
         </StatusBar>
     </Grid>

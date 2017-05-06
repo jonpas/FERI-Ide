@@ -59,8 +59,8 @@ namespace Ide
             }
 
             // Set binding sources
-            ProjectTree.ItemsSource = Projects;
-            MethodList.ItemsSource = Methods;
+            ProjStruct.ProjectTree.ItemsSource = Projects;
+            ProjStruct.MethodList.ItemsSource = Methods;
 
             //TEST
             //Projects.Add(new Project(Properties.Settings.Default.ProjectsDirectory, "Ide.proj.xml", "C#", "Code", "WPF"));
@@ -151,7 +151,7 @@ namespace Ide
             // Clean up tree view if Cancel was not selected
             if (saveResult != MessageBoxResult.Cancel)
             {
-                Project selectedItem = (Project)ProjectTree.SelectedItem;
+                Project selectedItem = (Project)ProjStruct.ProjectTree.SelectedItem;
                 Projects.Remove(selectedItem);
             }
 
@@ -178,9 +178,9 @@ namespace Ide
 
                 //TODO Cleanup
                 //TODO Handle cannot create exceptions (in Project and FolderItem classes)
-                if (ProjectTree.SelectedItem.GetType() == typeof(FileItem))
+                if (ProjStruct.ProjectTree.SelectedItem.GetType() == typeof(FileItem))
                 {
-                    FileItem selectedItem = (FileItem)ProjectTree.SelectedItem;
+                    FileItem selectedItem = (FileItem)ProjStruct.ProjectTree.SelectedItem;
                     if (selectedItem.ContainingFolder != null)
                     {
                         if (wantedFolder)
@@ -196,9 +196,9 @@ namespace Ide
                             selectedItem.ContainingProject.AddFile(fileName);
                     }
                 }
-                else if (ProjectTree.SelectedItem.GetType() == typeof(FolderItem))
+                else if (ProjStruct.ProjectTree.SelectedItem.GetType() == typeof(FolderItem))
                 {
-                    FolderItem selectedItem = (FolderItem)ProjectTree.SelectedItem;
+                    FolderItem selectedItem = (FolderItem)ProjStruct.ProjectTree.SelectedItem;
                     if (wantedFolder)
                         selectedItem.AddFolder(fileName);
                     else
@@ -206,7 +206,7 @@ namespace Ide
                 }
                 else
                 {
-                    Project selectedItem = (Project)ProjectTree.SelectedItem;
+                    Project selectedItem = (Project)ProjStruct.ProjectTree.SelectedItem;
                     if (wantedFolder)
                         selectedItem.AddFolder(fileName);
                     else
@@ -226,20 +226,20 @@ namespace Ide
                 if (newName != "")
                 {
                     //TODO Cleanup
-                    if (ProjectTree.SelectedItem.GetType() == typeof(FileItem))
+                    if (ProjStruct.ProjectTree.SelectedItem.GetType() == typeof(FileItem))
                     {
-                        FileItem selectedItem = (FileItem)ProjectTree.SelectedItem;
+                        FileItem selectedItem = (FileItem)ProjStruct.ProjectTree.SelectedItem;
                         selectedItem.Name = newName;
 
                     }
-                    else if (ProjectTree.SelectedItem.GetType() == typeof(FolderItem))
+                    else if (ProjStruct.ProjectTree.SelectedItem.GetType() == typeof(FolderItem))
                     {
-                        FolderItem selectedItem = (FolderItem)ProjectTree.SelectedItem;
+                        FolderItem selectedItem = (FolderItem)ProjStruct.ProjectTree.SelectedItem;
                         selectedItem.Name = newName;
                     }
                     else
                     {
-                        Project selectedProject = (Project)ProjectTree.SelectedItem;
+                        Project selectedProject = (Project)ProjStruct.ProjectTree.SelectedItem;
                         selectedProject.Name = newName;
                     }
                 }
@@ -253,15 +253,15 @@ namespace Ide
         private void DeleteFileFolder(object sender, RoutedEventArgs e)
         {
             //TODO Add confirmation dialog
-            if (ProjectTree.SelectedItem.GetType() == typeof(FileItem))
+            if (ProjStruct.ProjectTree.SelectedItem.GetType() == typeof(FileItem))
             {
-                FileItem selectedItem = (FileItem)ProjectTree.SelectedItem;
+                FileItem selectedItem = (FileItem)ProjStruct.ProjectTree.SelectedItem;
                 File.Delete(selectedItem.Info.FullName);
                 selectedItem.ContainingCollection.Remove(selectedItem);
             }
             else
             {
-                FolderItem selectedItem = (FolderItem)ProjectTree.SelectedItem;
+                FolderItem selectedItem = (FolderItem)ProjStruct.ProjectTree.SelectedItem;
                 Directory.Delete(selectedItem.Info.FullName);
                 selectedItem.ContainingCollection.Remove(selectedItem);
             }
@@ -272,7 +272,8 @@ namespace Ide
             tab.FontStyle = FontStyles.Italic;
         }
 
-        private void ProjectItemSelected(object sender, RoutedPropertyChangedEventArgs<object> e)
+        //TODO Move to ProjectStructure and make private
+        /*private*/public void ProjectItemSelected(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             // Remove previous items
             Methods.Clear();
@@ -314,7 +315,8 @@ namespace Ide
             }
         }
 
-        private void MethodSelected(object sender, SelectionChangedEventArgs e)
+        //TODO Move to ProjectStructure and make private
+        /*private*/public void MethodSelected(object sender, SelectionChangedEventArgs e)
         {
             ListView methodList = (ListView)sender;
             Method selectedItem = (Method)methodList.SelectedItem;
@@ -368,7 +370,7 @@ namespace Ide
 
         private void SaveFile(object sender, RoutedEventArgs e)
         {
-            FileItem selectedItem = (FileItem)ProjectTree.SelectedItem;
+            FileItem selectedItem = (FileItem)ProjStruct.ProjectTree.SelectedItem;
             File.WriteAllText(selectedItem.Location, TextEditor.Text);
         }
 

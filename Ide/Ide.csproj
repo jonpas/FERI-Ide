@@ -58,7 +58,7 @@
     </ApplicationDefinition>
     <Compile Include="Cache.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="Controls\ProjectStructure.xaml.cs">
+    <Compile Include="ProjectStructure.xaml.cs">
       <DependentUpon>ProjectStructure.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\InvertBoolConverter.cs" />
@@ -79,7 +79,7 @@
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Controls\ProjectStructure.xaml">
+    <Page Include="ProjectStructure.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,0 +1,108 @@
+﻿<UserControl x:Class="Ide.ProjectStructure"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Ide"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!--Folder Structure View-->
+        <TreeView Name="ProjectTree" BorderThickness="0" SelectedItemChanged="ProjectItemSelected">
+            <!--TODO Sort with CollectionViewSource-->
+            <TreeView.Resources>
+                <!--Project-->
+                <HierarchicalDataTemplate DataType="{x:Type local:Project}" ItemsSource="{Binding FilesFolders}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="Resources/FileTypes/ProjectFolderOpen_16x.png"/>
+                        <TextBlock Text="{Binding Name}"/>
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+
+                <!--Folders inside project directory-->
+                <HierarchicalDataTemplate DataType="{x:Type local:FolderItem}" ItemsSource="{Binding Children}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Name="ProjectTreeFolderImage" Source="Resources/FileTypes/Folder_16x.png"/>
+                        <TextBlock Text="{Binding Name}"/>
+                    </StackPanel>
+
+                    <HierarchicalDataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=TreeViewItem}, Path=IsExpanded}" Value="True">
+                            <Setter TargetName="ProjectTreeFolderImage" Property="Source" Value="Resources/FileTypes/FolderOpen_16x.png"/>
+                        </DataTrigger>
+                    </HierarchicalDataTemplate.Triggers>
+                </HierarchicalDataTemplate>
+
+                <!--Files inside project directory-->
+                <DataTemplate DataType="{x:Type local:FileItem}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image>
+                            <Image.Style>
+                                <Style TargetType="{x:Type Image}">
+                                    <Setter Property="Source" Value="Resources/FileTypes/Document_16x.png"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Path=Extension}" Value=".cs">
+                                            <Setter Property="Source" Value="Resources/FileTypes/CS_16x.png"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Path=Extension}" Value=".xml">
+                                            <Setter Property="Source" Value="Resources/FileTypes/XMLFile_16x.png"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Path=Extension}" Value=".xaml">
+                                            <Setter Property="Source" Value="Resources/FileTypes/XMLFile_16x.png"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Path=Extension}" Value=".config">
+                                            <Setter Property="Source" Value="Resources/FileTypes/ConfigurationFile_16x.png"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Path=Extension}" Value=".png">
+                                            <Setter Property="Source" Value="Resources/FileTypes/Image_16x.png"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                        <TextBlock Text="{Binding Name}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </TreeView.Resources>
+        </TreeView>
+
+        <!--Resize Splitters-->
+        <GridSplitter Grid.Row="1" Height="2" HorizontalAlignment="Stretch" Background="LightGray"/>
+
+        <!--Hierarchy View-->
+        <ListView Name="MethodList" Grid.Row="2" BorderThickness="0">
+            <!--SelectionChanged="MethodSelected"-->
+            <ListView.Resources>
+                <DataTemplate DataType="{x:Type local:Method}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image>
+                            <Image.Style>
+                                <Style TargetType="{x:Type Image}">
+                                    <Setter Property="Source" Value="Resources/FileTypes/Document_16x.png"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Type}" Value="private">
+                                            <Setter Property="Source" Value="Resources/FileTypes/MethodPrivate_16x.png"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Type}" Value="protected">
+                                            <Setter Property="Source" Value="Resources/FileTypes/MethodProtect_16x.png"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Type}" Value="public">
+                                            <Setter Property="Source" Value="Resources/FileTypes/Method_purple_16x.png"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                        <TextBlock Text="{Binding Signature}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.Resources>
+        </ListView>
+    </Grid>
+</UserControl>
