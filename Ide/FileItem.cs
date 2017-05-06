@@ -20,6 +20,11 @@ namespace Ide
             }
         }
 
+        public string Location
+        {
+            get { return Info.FullName; }
+        }
+
         public string Extension
         {
             get { return Info.Extension; }

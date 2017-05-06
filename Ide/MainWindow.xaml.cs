@@ -21,6 +21,7 @@ namespace Ide
 
         public MainWindow()
         {
+            //TODO Encode files in UTF-8 without BOM (writing and reading)
             InitializeComponent();
 
             // Create default projects directory if it doesn't exist yet
@@ -73,7 +74,6 @@ namespace Ide
 
         private bool IsProjectOpen(string path)
         {
-            path = path.TrimEnd(Path.DirectorySeparatorChar);
             foreach (Project proj in Projects)
             {
                 if (proj.Location == path)
@@ -135,7 +135,7 @@ namespace Ide
         {
             OpenFileDialog dlg = new OpenFileDialog();
             dlg.InitialDirectory = Properties.Settings.Default.ProjectsDirectory;
-            dlg.Filter = "Text documents (.xml)|*.xml"; // Filter files by extension
+            dlg.Filter = "Project Files (.xml)|*.xml"; // Filter files by extension
 
             if (dlg.ShowDialog() == true)
             {
@@ -348,6 +348,39 @@ namespace Ide
                     tab.Header = "No File";
                 }
                 tab.FontStyle = FontStyles.Italic;
+            }
+        }
+
+        private void OpenFile(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.InitialDirectory = Properties.Settings.Default.ProjectsDirectory;
+            dlg.Filter = Project.AllowedFileTypes; // Filter files by extension
+
+            if (dlg.ShowDialog() == true)
+            {
+                TabItem tab = (TabItem)TextEditor.Parent;
+                TextEditor.Text = File.ReadAllText(dlg.FileName);
+                tab.Header = Path.GetFileName(dlg.FileName);
+                tab.FontStyle = FontStyles.Italic;
+            }
+        }
+
+        private void SaveFile(object sender, RoutedEventArgs e)
+        {
+            FileItem selectedItem = (FileItem)ProjectTree.SelectedItem;
+            File.WriteAllText(selectedItem.Location, TextEditor.Text);
+        }
+
+        private void SaveFileAs(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog dlg = new SaveFileDialog();
+            dlg.InitialDirectory = Properties.Settings.Default.ProjectsDirectory;
+            dlg.Filter = Project.AllowedFileTypes; // Filter files by extension
+
+            if (dlg.ShowDialog() == true)
+            {
+                File.WriteAllText(dlg.FileName, TextEditor.Text);
             }
         }
 

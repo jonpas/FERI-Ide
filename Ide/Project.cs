@@ -11,6 +11,8 @@ namespace Ide
 {
     public class Project : INotifyPropertyChanged
     {
+        public const string AllowedFileTypes = "Text Files (*.txt,*.cs,*.xaml)|*.txt;*.cs;*.xaml";
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         //TODO Add one more serializable property (task requirement)
