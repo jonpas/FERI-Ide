@@ -239,7 +239,7 @@
         </StackPanel>
 
         <!--Project Structure-->
-        <local:ProjectStructure x:Name="ProjStruct" Grid.Row="1" Grid.RowSpan="3"></local:ProjectStructure>
+        <local:ProjectStructure x:Name="ProjStruct" Grid.Row="1" Grid.RowSpan="3" OnProjectItemSelected="ProjectItemSelected" OnMethodSelected="MethodSelected"/>
 
         <!--Resize Splitters-->
         <GridSplitter Grid.Row="1" Grid.Column="1" Grid.RowSpan="3" Width="2" HorizontalAlignment="Stretch" Background="LightGray"/>

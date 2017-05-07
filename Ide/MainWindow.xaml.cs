@@ -273,15 +273,14 @@ namespace Ide
             tab.FontStyle = FontStyles.Italic;
         }
 
-        //TODO Move to ProjectStructure and make private
-        /*private*/public void ProjectItemSelected(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private void ProjectItemSelected(object sender, object projectItem)
         {
             // Remove previous items
             Methods.Clear();
 
-            if (e.NewValue != null && e.NewValue.GetType() == typeof(FileItem))
+            if (projectItem != null && projectItem.GetType() == typeof(FileItem))
             {
-                FileItem selectedItemFile = (FileItem)e.NewValue;
+                FileItem selectedItemFile = (FileItem)projectItem;
                 FileInfo selectedItem = selectedItemFile.Info;
 
                 TabItem tab = (TabItem)TextEditor.Parent;
@@ -316,11 +315,9 @@ namespace Ide
             }
         }
 
-        //TODO Move to ProjectStructure and make private
-        /*private*/public void MethodSelected(object sender, SelectionChangedEventArgs e)
+        public void MethodSelected(object sender, ListView methodListItem)
         {
-            ListView methodList = (ListView)sender;
-            Method selectedItem = (Method)methodList.SelectedItem;
+            Method selectedItem = (Method)methodListItem.SelectedItem;
 
             if (selectedItem != null)
             {
