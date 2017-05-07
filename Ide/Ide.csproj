@@ -210,6 +210,15 @@
   <ItemGroup>
     <Resource Include="Resources\NewSolutionFolder_16x.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\MethodAdded_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\MethodRenamed_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\MethodDeleted_16x.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
