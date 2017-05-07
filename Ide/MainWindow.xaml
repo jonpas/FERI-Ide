@@ -44,7 +44,7 @@
                             <Style TargetType="{x:Type MenuItem}">
                                 <Setter Property="IsEnabled" Value="False"/>
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ElementName=ProjectTree, Path=SelectedItem, Converter={StaticResource TypeOfConverter}}" Value="{x:Type local:Project}">
+                                    <DataTrigger Binding="{Binding ElementName=ProjStruct, Path=SelectedProjectItem, Converter={StaticResource TypeOfConverter}}" Value="{x:Type local:Project}">
                                         <Setter Property="IsEnabled" Value="True"/>
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -60,13 +60,13 @@
                             <Image Source="Resources/OpenFolder_16x.png"/>
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Header="{Binding ElementName=ProjectTree, Path=SelectedValue.Name}" HeaderStringFormat="Save {0}" Click="SaveFile">
+                    <MenuItem Header="{Binding ElementName=ProjStruct, Path=SelectedProjectValue.Name}" HeaderStringFormat="Save {0}" Click="SaveFile">
                         <!--TODO Use current open tab-->
                         <MenuItem.Style>
                             <Style TargetType="{x:Type MenuItem}">
                                 <Setter Property="IsEnabled" Value="False"/>
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ElementName=ProjectTree, Path=SelectedItem, Converter={StaticResource TypeOfConverter}}" Value="{x:Type local:FileItem}">
+                                    <DataTrigger Binding="{Binding ElementName=ProjStruct, Path=SelectedProjectItem, Converter={StaticResource TypeOfConverter}}" Value="{x:Type local:FileItem}">
                                         <Setter Property="IsEnabled" Value="True"/>
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -76,13 +76,13 @@
                             <Image Source="Resources/Save_16x.png" Style="{StaticResource EnableDisableImageStyle}"/>
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Header="{Binding ElementName=ProjectTree, Path=SelectedValue.Name}" HeaderStringFormat="Save {0} As..." Click="SaveFileAs">
+                    <MenuItem Header="{Binding ElementName=ProjStruct, Path=SelectedProjectValue.Name}" HeaderStringFormat="Save {0} As..." Click="SaveFileAs">
                         <!--TODO Use current open tab-->
                         <MenuItem.Style>
                             <Style TargetType="{x:Type MenuItem}">
                                 <Setter Property="IsEnabled" Value="False"/>
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ElementName=ProjectTree, Path=SelectedItem, Converter={StaticResource TypeOfConverter}}" Value="{x:Type local:FileItem}">
+                                    <DataTrigger Binding="{Binding ElementName=ProjStruct, Path=SelectedProjectItem, Converter={StaticResource TypeOfConverter}}" Value="{x:Type local:FileItem}">
                                         <Setter Property="IsEnabled" Value="True"/>
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -149,7 +149,7 @@
                         <Button.Style>
                             <Style TargetType="{x:Type Button}">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ElementName=ProjectTree, Path=SelectedItem, Converter={StaticResource TypeOfConverter}}" Value="{x:Null}">
+                                    <DataTrigger Binding="{Binding ElementName=ProjStruct, Path=SelectedProjectItem, Converter={StaticResource TypeOfConverter}}" Value="{x:Null}">
                                         <Setter Property="IsEnabled" Value="False"/>
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -161,7 +161,7 @@
                         <Button.Style>
                             <Style TargetType="{x:Type Button}">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ElementName=ProjectTree, Path=SelectedItem, Converter={StaticResource TypeOfConverter}}" Value="{x:Null}">
+                                    <DataTrigger Binding="{Binding ElementName=ProjStruct, Path=SelectedProjectItem, Converter={StaticResource TypeOfConverter}}" Value="{x:Null}">
                                         <Setter Property="IsEnabled" Value="False"/>
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -173,7 +173,7 @@
                         <Button.Style>
                             <Style TargetType="{x:Type Button}">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ElementName=ProjectTree, Path=SelectedItem}" Value="{x:Null}">
+                                    <DataTrigger Binding="{Binding ElementName=ProjStruct, Path=SelectedProjectItem}" Value="{x:Null}">
                                         <Setter Property="IsEnabled" Value="False"/>
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -186,10 +186,10 @@
                             <Style TargetType="{x:Type Button}">
                                 <Setter Property="IsEnabled" Value="False"/>
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ElementName=ProjectTree, Path=SelectedItem, Converter={StaticResource TypeOfConverter}}" Value="{x:Type local:FileItem}">
+                                    <DataTrigger Binding="{Binding ElementName=ProjStruct, Path=SelectedProjectItem, Converter={StaticResource TypeOfConverter}}" Value="{x:Type local:FileItem}">
                                         <Setter Property="IsEnabled" Value="True"/>
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding ElementName=ProjectTree, Path=SelectedItem, Converter={StaticResource TypeOfConverter}}" Value="{x:Type local:FolderItem}">
+                                    <DataTrigger Binding="{Binding ElementName=ProjStruct, Path=SelectedProjectItem, Converter={StaticResource TypeOfConverter}}" Value="{x:Type local:FolderItem}">
                                         <Setter Property="IsEnabled" Value="True"/>
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -202,10 +202,10 @@
                     <Button Click="OpenFile">
                         <Image Source="Resources/OpenFolder_16x.png" ToolTip="Open File"/>
                     </Button>
-                    <Button Click="SaveFile" DataContext="{Binding ElementName=ProjectTree}">
+                    <Button Click="SaveFile">
                         <Image Source="Resources/Save_16x.png" Style="{StaticResource EnableDisableImageStyle}">
                             <Image.ToolTip>
-                                <ToolTip Content="{Binding Path=SelectedValue.Name}" ContentStringFormat="Save {0}"/>
+                                <ToolTip Content="{Binding ElementName=ProjStruct, Path=SelectedProjectValue.Name}" ContentStringFormat="Save {0}"/>
                                 <!--TODO Use current open tab-->
                             </Image.ToolTip>
                         </Image>
@@ -213,7 +213,7 @@
                             <Style TargetType="{x:Type Button}">
                                 <Setter Property="IsEnabled" Value="False"/>
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ElementName=ProjectTree, Path=SelectedItem, Converter={StaticResource TypeOfConverter}}" Value="{x:Type local:FileItem}">
+                                    <DataTrigger Binding="{Binding ElementName=ProjStruct, Path=SelectedProjectItem, Converter={StaticResource TypeOfConverter}}" Value="{x:Type local:FileItem}">
                                         <Setter Property="IsEnabled" Value="True"/>
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -239,7 +239,7 @@
         </StackPanel>
 
         <!--Project Structure-->
-        <local:ProjectStructure x:Name="ProjStruct" Grid.Row="1" Grid.RowSpan="3" OnProjectItemSelected="ProjectItemSelected" OnMethodSelected="MethodSelected"/>
+        <local:ProjectStructure x:Name="ProjStruct" Grid.Row="1" Grid.RowSpan="3" SelectedProjectItemChanged="ProjectItemSelected" SelectedMethodChanged="MethodSelected"/>
 
         <!--Resize Splitters-->
         <GridSplitter Grid.Row="1" Grid.Column="1" Grid.RowSpan="3" Width="2" HorizontalAlignment="Stretch" Background="LightGray"/>
