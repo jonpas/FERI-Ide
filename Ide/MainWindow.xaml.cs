@@ -2,7 +2,6 @@
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -17,8 +16,7 @@ namespace Ide
     /// </summary>
     public partial class MainWindow : Window
     {
-        ObservableCollection<Project> Projects = new ObservableCollection<Project>();
-        ObservableCollection<Method> Methods = new ObservableCollection<Method>();
+        //TODO Move more things to ProjectStructure UserControl
 
         public MainWindow()
         {
@@ -48,7 +46,7 @@ namespace Ide
                         List<OpenProject> openProjects = cache.OpenProjects;
                         foreach (var openProj in openProjects)
                         {
-                            ReadProject(openProj.ProjectFileLocation, openProj.Location);
+                            ProjStruct.ReadProject(openProj.ProjectFileLocation, openProj.Location);
                         }
                     }
                     catch
@@ -58,58 +56,11 @@ namespace Ide
                     }
                 }
             }
-
-            // Set binding sources
-            ProjStruct.ProjectTree.ItemsSource = Projects;
-            ProjStruct.MethodList.ItemsSource = Methods;
-
-            //TEST
-            //Projects.Add(new Project(Properties.Settings.Default.ProjectsDirectory, "Ide.proj.xml", "C#", "Code", "WPF"));
-            //Projects.Add(new Project(Properties.Settings.Default.ProjectsDirectory, "Project.xml", "C++", "Code", "WPF"));
         }
 
         private void Exit(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
-        }
-
-        private bool IsProjectOpen(string path)
-        {
-            foreach (Project proj in Projects)
-            {
-                if (proj.Location == path)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private void ReadProject(string projFilePath, string dir)
-        {
-            if (File.Exists(projFilePath) && !IsProjectOpen(dir)) //TODO Check if project already open
-            {
-                XmlSerializer serializer = new XmlSerializer(typeof(Project));
-                using (TextReader reader = new StreamReader(projFilePath))
-                {
-                    try
-                    {
-                        Project proj = (Project)serializer.Deserialize(reader);
-                        // Create new project with defined path (project file does not contain location)
-                        Projects.Add(new Project(dir, proj.ProjectFile, proj.Language, proj.Type, proj.Framework, proj.IgnoredItems));
-                    }
-                    catch
-                    {
-                        //TODO Write to pop-up
-                        Console.WriteLine("Error! Project failed deserializing!");
-                    }
-                }
-            }
-            else
-            {
-                //TODO Error pop-up
-                Console.WriteLine("Error! No project file or project already open!");
-            }
         }
 
         private void CreateProject(object sender, RoutedEventArgs e)
@@ -118,17 +69,7 @@ namespace Ide
 
             if (newProjWin.ShowDialog() == true)
             {
-                string projectFolder = Path.GetDirectoryName(newProjWin.SelectedLocation);
-                string projectFile = Path.GetFileName(newProjWin.SelectedLocation);
-                Project newProj = new Project(projectFolder, projectFile, newProjWin.SelectedLanguage, newProjWin.SelectedType, newProjWin.SelectedFramework);
-
-                XmlSerializer serializer = new XmlSerializer(typeof(Project));
-                using (FileStream newProjFile = File.Create(newProjWin.SelectedLocation))
-                {
-                    serializer.Serialize(newProjFile, newProj);
-                }
-
-                Projects.Add(newProj);
+                ProjStruct.CreateProject(newProjWin.SelectedLocation, newProjWin.SelectedLanguage, newProjWin.SelectedType, newProjWin.SelectedFramework);
             }
         }
 
@@ -140,7 +81,7 @@ namespace Ide
 
             if (dlg.ShowDialog() == true)
             {
-                ReadProject(dlg.FileName, Path.GetDirectoryName(dlg.FileName));
+                ProjStruct.ReadProject(dlg.FileName, Path.GetDirectoryName(dlg.FileName));
             }
         }
 
@@ -153,7 +94,7 @@ namespace Ide
             if (saveResult != MessageBoxResult.Cancel)
             {
                 Project selectedItem = (Project)ProjStruct.ProjectTree.SelectedItem;
-                Projects.Remove(selectedItem);
+                ProjStruct.CloseProject(selectedItem);
             }
 
             TabItem tab = (TabItem)TextEditor.Parent;
@@ -276,7 +217,7 @@ namespace Ide
         private void ProjectItemSelected(object sender, object projectItem)
         {
             // Remove previous items
-            Methods.Clear();
+            ProjStruct.ClearMethods();
 
             if (projectItem != null && projectItem.GetType() == typeof(FileItem))
             {
@@ -306,7 +247,7 @@ namespace Ide
                             {
                                 if (match.Groups[2] != null)
                                 {
-                                    Methods.Add(new Method(match.Groups[1].Value, match.Groups[2].Value + ")", selectedItem)); // 1: type, 2: signature
+                                    ProjStruct.AddMethod(match.Groups[1].Value, match.Groups[2].Value + ")", selectedItem); // 1: type, 2: signature
                                 }
                             }
                         }
@@ -404,7 +345,7 @@ namespace Ide
             XmlSerializer serializer = new XmlSerializer(typeof(Cache));
             using (TextWriter writer = new StreamWriter(Constants.CacheFile))
             {
-                Cache cache = new Cache(Projects);
+                Cache cache = new Cache(ProjStruct.Projects);
                 serializer.Serialize(writer, cache);
             }
         }
