@@ -114,7 +114,7 @@ namespace Ide
 
         public void AddMethod(string type, string signature, FileInfo containingFile)
         {
-            Methods.Add(new Method(type, signature + ")", containingFile));
+            Methods.Add(new Method(type, signature, containingFile));
         }
 
         public void ClearMethods()
@@ -139,6 +139,46 @@ namespace Ide
         public void MethodSelected(object sender, SelectionChangedEventArgs e)
         {
             SelectedMethodChanged?.Invoke(this, (ListView)sender);
+        }
+
+        private void CreateMethod(object sender, RoutedEventArgs e)
+        {
+            //TODO Method creation window instead of string splitting (with disabled buttons if empty fields)
+            InputWindow input = new InputWindow();
+            if (input.ShowDialog() == true)
+            {
+                string[] methodInfo = input.Input.Text.Split(null); // Space separation
+                if (methodInfo.Length > 1)
+                {
+                    FileItem selectedFile = (FileItem)SelectedProjectItem;
+                    AddMethod(methodInfo[0], methodInfo[0] + " " + methodInfo[1], selectedFile.Info);
+                }
+            }
+        }
+
+        private void EditMethod(object sender, RoutedEventArgs e)
+        {
+            Method selectedMethod = (Method)MethodList.SelectedItem;
+
+            //TODO Method creation window instead of string splitting (with disabled buttons if empty fields)
+            InputWindow input = new InputWindow();
+            input.Input.Text = selectedMethod.Type + " " + selectedMethod.Signature;
+
+            if (input.ShowDialog() == true)
+            {
+                string[] methodInfo = input.Input.Text.Split(null); // Space separation
+                if (methodInfo.Length > 1)
+                {
+                    selectedMethod.Type = methodInfo[0];
+                    selectedMethod.Signature = methodInfo[0] + " " + methodInfo[1];
+                }
+            }
+        }
+
+        private void RemoveMethod(object sender, RoutedEventArgs e)
+        {
+            Method selectedMethod = (Method)MethodList.SelectedItem;
+            Methods.Remove(selectedMethod);
         }
     }
 }
