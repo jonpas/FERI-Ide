@@ -4,7 +4,7 @@ using System.Windows.Data;
 
 namespace Ide.Converters
 {
-    [ValueConversion(typeof(bool), typeof(bool))]
+    [ValueConversion(typeof(object), typeof(Type))]
     class TypeOfConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
