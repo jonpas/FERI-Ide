@@ -19,8 +19,7 @@
                 <Label Content="Project File Location:"/>
                 <Button Content="Browse" Padding="5,0,5,0" Click="Browse"/>
             </StackPanel>
-            <TextBox Name="LocationBox" IsEnabled="False" Margin="5,5,5,0"/>
-            <!-- Disabled as SaveFileDialog handles .xml requirement -->
+            <TextBox Name="LocationBox" IsEnabled="False" Margin="5,5,5,0"/><!-- Disabled as SaveFileDialog handles .xml requirement -->
 
             <Label Content="Language:"/>
             <ComboBox Name="LanguagesList" Margin="5,0,5,0" ItemsSource="{Binding Source={x:Static properties:Settings.Default}, Path=Languages}" SelectionChanged="SetLanguage"/>

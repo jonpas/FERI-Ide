@@ -6,6 +6,7 @@ using System.Windows.Data;
 
 namespace Ide
 {
+    // Adapted and expanded from: https://xinyustudio.wordpress.com/?s=WPF%20tree
     public class FolderItem : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;

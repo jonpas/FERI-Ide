@@ -2,6 +2,7 @@
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -14,9 +15,44 @@ namespace Ide
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
         //TODO Move more things to ProjectStructure UserControl
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public string Test = "sdgagasg";
+
+        public int SelectedLayout
+        {
+            get { return _selectedLayout; }
+            set
+            {
+                _selectedLayout = value;
+                if (_selectedLayout == 0) // Default
+                {
+                    ProjStruct.SetValue(Grid.ColumnProperty, 0);
+                    TabbedEditor.SetValue(Grid.ColumnProperty, 2);
+                    // Swap widths, leave default if already default (eg. first open)
+                    if (ColLeft.Width.Value != 200)
+                    {
+                        ColLeft.Width = ColRight.Width;
+                        ColRight.Width = new GridLength(1, GridUnitType.Star);
+                    }
+                }
+                else if (_selectedLayout == 1) // Mirrored
+                {
+                    ProjStruct.SetValue(Grid.ColumnProperty, 2);
+                    TabbedEditor.SetValue(Grid.ColumnProperty, 0);
+                    // Swap widths
+                    ColRight.Width = ColLeft.Width;
+                    ColLeft.Width = new GridLength(1, GridUnitType.Star);
+                }
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
+            }
+        }
+        private int _selectedLayout;
+
 
         public MainWindow()
         {
@@ -33,6 +69,7 @@ namespace Ide
 
             // Load settings
             TextEditor.WordWrap = Properties.Settings.Default.TextWrap;
+            SelectedLayout = Properties.Settings.Default.Layout;
 
             // Load cache
             if (File.Exists(Constants.CacheFile))
@@ -60,6 +97,7 @@ namespace Ide
 
         private void Exit(object sender, RoutedEventArgs e)
         {
+            // Automatically calls Exit() method with CancelEventArgs
             Application.Current.Shutdown();
         }
 
@@ -339,6 +377,7 @@ namespace Ide
         {
             // Save settings
             Properties.Settings.Default.TextWrap = TextEditor.WordWrap;
+            Properties.Settings.Default.Layout = SelectedLayout;
             Properties.Settings.Default.Save();
 
             // Save cache
@@ -348,6 +387,18 @@ namespace Ide
                 Cache cache = new Cache(ProjStruct.Projects);
                 serializer.Serialize(writer, cache);
             }
+        }
+
+        private void LayoutChanged_Default(object sender, RoutedEventArgs e)
+        {
+            if (SelectedLayout != 0)
+                SelectedLayout = 0;
+        }
+
+        private void LayoutChanged_Mirrored(object sender, RoutedEventArgs e)
+        {
+            if (SelectedLayout != 1)
+                SelectedLayout = 1;
         }
     }
 }

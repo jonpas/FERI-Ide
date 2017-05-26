@@ -50,6 +50,7 @@ namespace Ide
         {
             get
             {
+                // Adapted from: https://xinyustudio.wordpress.com/?s=WPF%20tree
                 var children = new CompositeCollection();
 
                 FoldersCollection = new ObservableCollection<FolderItem>();

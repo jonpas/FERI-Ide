@@ -79,5 +79,17 @@ namespace Ide.Properties {
                 this["ProjectsDirectory"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int Layout {
+            get {
+                return ((int)(this["Layout"]));
+            }
+            set {
+                this["Layout"] = value;
+            }
+        }
     }
 }
