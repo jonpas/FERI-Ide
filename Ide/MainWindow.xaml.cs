@@ -6,8 +6,11 @@ using System.ComponentModel;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Threading;
 using System.Xml.Serialization;
 
 namespace Ide
@@ -93,12 +96,23 @@ namespace Ide
                     }
                 }
             }
+
+            // Autosave timer
+            DispatcherTimer dt = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(Properties.Settings.Default.AutoSaveInterval) };
+            dt.Tick += AutoSave;
+            dt.Start();
         }
 
-        private void Exit(object sender, RoutedEventArgs e)
+        private async void AutoSave(object sender, EventArgs e)
         {
-            // Automatically calls Exit() method with CancelEventArgs
-            Application.Current.Shutdown();
+            Status.Content = "AutoSaved at " +  DateTime.Now.ToLongTimeString();
+
+            // Update auto-save interval in case it changed
+            ((DispatcherTimer)sender).Interval = TimeSpan.FromSeconds(Properties.Settings.Default.AutoSaveInterval);
+
+            //TODO Status bar messages using priority queue
+            await Task.Delay(2000);
+            Status.Content = "";
         }
 
         private void CreateProject(object sender, RoutedEventArgs e)
@@ -388,6 +402,12 @@ namespace Ide
                 Cache cache = new Cache(ProjStruct.Projects);
                 serializer.Serialize(writer, cache);
             }
+        }
+
+        private void Exit(object sender, RoutedEventArgs e)
+        {
+            // Automatically calls above Exit() method with CancelEventArgs
+            Application.Current.Shutdown();
         }
 
         private void LayoutChanged_Default(object sender, RoutedEventArgs e)

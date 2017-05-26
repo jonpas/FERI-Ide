@@ -24,6 +24,12 @@
                         <Button Content="Browse" Padding="5,0,5,0" Click="Browse"/>
                         <TextBox Name="ProjectsDirectoryText" Text="{Binding Source={x:Static properties:Settings.Default}, Path=ProjectsDirectory}" IsEnabled="False" Margin="5,5,5,0"/>
                     </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                        <Label Content="Auto-Save Interval:"/>
+                        <TextBox Text="{Binding Source={x:Static properties:Settings.Default}, Path=AutoSaveInterval}" Margin="5,5,5,0"/><!--TODO Verify input-->
+                        <Label Content=" minutes"/>
+                    </StackPanel>
                 </StackPanel>
             </TabItem>
 

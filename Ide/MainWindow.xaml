@@ -285,6 +285,7 @@
         <!--Status Bar-->
         <StatusBar Grid.Row="3" Grid.ColumnSpan="3">
             <StatusBarItem Content="Status:"/>
+            <StatusBarItem Name="Status"/>
         </StatusBar>
     </Grid>
 </Window>
