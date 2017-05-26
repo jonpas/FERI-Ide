@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Xml.Serialization;
@@ -30,6 +31,24 @@ namespace Ide
             set { SetValue(SelectedProjectValueProperty, value); }
         }
 
+        public static readonly DependencyProperty SelectedMethodItemProperty =
+            DependencyProperty.Register("SelectedMethodItem", typeof(object), typeof(ProjectStructure));
+
+        public static readonly DependencyProperty SelectedMethodValueProperty =
+            DependencyProperty.Register("SelectedMethodValue", typeof(object), typeof(ProjectStructure));
+
+        public object SelectedMethodItem
+        {
+            get { return GetValue(SelectedMethodItemProperty); }
+            set { SetValue(SelectedMethodItemProperty, value); }
+        }
+
+        public object SelectedMethodValue
+        {
+            get { return GetValue(SelectedMethodValueProperty); }
+            set { SetValue(SelectedMethodValueProperty, value); }
+        }
+
 
         public ObservableCollection<Project> Projects { get; }
         public ObservableCollection<Method> Methods { get; }
@@ -56,12 +75,8 @@ namespace Ide
         private bool IsProjectOpen(string path)
         {
             foreach (Project proj in Projects)
-            {
                 if (proj.Location == path)
-                {
                     return true;
-                }
-            }
             return false;
         }
 
@@ -138,6 +153,8 @@ namespace Ide
 
         public void MethodSelected(object sender, SelectionChangedEventArgs e)
         {
+            SelectedMethodItem = ((ListView)sender).SelectedItem;
+            SelectedMethodValue = ((ListView)sender).SelectedValue;
             SelectedMethodChanged?.Invoke(this, (ListView)sender);
         }
 
@@ -148,10 +165,17 @@ namespace Ide
             if (input.ShowDialog() == true)
             {
                 string[] methodInfo = input.Input.Text.Split(null); // Space separation
-                if (methodInfo.Length > 1)
+                if (methodInfo.Length > 2)
                 {
                     FileItem selectedFile = (FileItem)SelectedProjectItem;
-                    AddMethod(methodInfo[0], methodInfo[0] + " " + methodInfo[1], selectedFile.Info);
+                    string signature = methodInfo[1] + " " + methodInfo[2];
+                    foreach (var m in methodInfo.Skip(3))
+                        signature += " " + m;
+                    AddMethod(methodInfo[0], signature, selectedFile.Info);
+                }
+                else
+                {
+                    //TODO Show invalid input error
                 }
             }
         }
@@ -167,18 +191,53 @@ namespace Ide
             if (input.ShowDialog() == true)
             {
                 string[] methodInfo = input.Input.Text.Split(null); // Space separation
-                if (methodInfo.Length > 1)
+                if (methodInfo.Length > 2)
                 {
                     selectedMethod.Type = methodInfo[0];
-                    selectedMethod.Signature = methodInfo[0] + " " + methodInfo[1];
+                    selectedMethod.Signature = methodInfo[1] + " " + methodInfo[2];
+                    foreach (var m in methodInfo.Skip(3))
+                        selectedMethod.Signature += " " + m;
+                }
+                else
+                {
+                    //TODO Show invalid input error
                 }
             }
         }
-
         private void RemoveMethod(object sender, RoutedEventArgs e)
         {
             Method selectedMethod = (Method)MethodList.SelectedItem;
             Methods.Remove(selectedMethod);
+        }
+
+
+        public delegate void GetCreatedNewFileFolder(object sender, RoutedEventArgs e);
+        public event GetCreatedNewFileFolder CreatedNewFileFolder;
+
+        public delegate void GetRenamedFileFolder(object sender, RoutedEventArgs e);
+        public event GetRenamedFileFolder RenamedFileFolder;
+
+        public delegate void GetDeletedFileFolder(object sender, RoutedEventArgs e);
+        public event GetDeletedFileFolder DeletedFileFolder;
+
+        private void NewFile(object sender, RoutedEventArgs e)
+        {
+            CreatedNewFileFolder?.Invoke(new Button() { Tag = "" }, e);
+        }
+
+        private void NewFolder(object sender, RoutedEventArgs e)
+        {
+            CreatedNewFileFolder?.Invoke(new Button() { Tag = "Folder" }, e);
+        }
+
+        private void Rename(object sender, RoutedEventArgs e)
+        {
+            RenamedFileFolder?.Invoke(this, e);
+        }
+
+        private void Remove(object sender, RoutedEventArgs e)
+        {
+            DeletedFileFolder?.Invoke(this, e);
         }
     }
 }

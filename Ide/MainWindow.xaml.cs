@@ -197,6 +197,7 @@ namespace Ide
 
         private void RenameFileFolderProject(object sender, RoutedEventArgs e)
         {
+            //TODO Add current name to input window
             InputWindow input = new InputWindow();
             if (input.ShowDialog() == true)
             {
@@ -232,7 +233,7 @@ namespace Ide
 
         private void DeleteFileFolder(object sender, RoutedEventArgs e)
         {
-            //TODO Add confirmation dialog
+            //TODO Add confirmation dialog (note: folder will remove all items in it recursively!)
             if (ProjStruct.ProjectTree.SelectedItem.GetType() == typeof(FileItem))
             {
                 FileItem selectedItem = (FileItem)ProjStruct.ProjectTree.SelectedItem;
@@ -242,7 +243,7 @@ namespace Ide
             else
             {
                 FolderItem selectedItem = (FolderItem)ProjStruct.ProjectTree.SelectedItem;
-                Directory.Delete(selectedItem.Info.FullName);
+                Directory.Delete(selectedItem.Info.FullName, true);
                 selectedItem.ContainingCollection.Remove(selectedItem);
             }
 
