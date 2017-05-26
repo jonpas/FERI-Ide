@@ -7,6 +7,9 @@
              Name="thisClass"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary Source="Dictionaries/ProjectStructureDictionary.xaml"/>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -74,59 +77,23 @@
 
             <TreeView.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="New File" Click="NewFile">
-                        <MenuItem.Style>
-                            <Style TargetType="{x:Type MenuItem}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding PlacementTarget.SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType=ContextMenu}}" Value="{x:Null}">
-                                        <Setter Property="IsEnabled" Value="False"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </MenuItem.Style>
+                    <MenuItem Header="New File" Click="NewFile" Style="{StaticResource ResourceKey=ToggleContextMenuItemOnSelectedItem}">
                         <MenuItem.Icon>
                             <Image Source="Resources/NewFile_16x.png"/>
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Header="New Folder" Click="NewFolder">
-                        <MenuItem.Style>
-                            <Style TargetType="{x:Type MenuItem}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding PlacementTarget.SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType=ContextMenu}}" Value="{x:Null}">
-                                        <Setter Property="IsEnabled" Value="False"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </MenuItem.Style>
+                    <MenuItem Header="New Folder" Click="NewFolder" Style="{StaticResource ResourceKey=ToggleContextMenuItemOnSelectedItem}">
                         <MenuItem.Icon>
                             <Image Source="Resources/NewSolutionFolder_16x.png"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     <Separator/>
-                    <MenuItem Header="Rename" Click="Rename">
-                        <MenuItem.Style>
-                            <Style TargetType="{x:Type MenuItem}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding PlacementTarget.SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType=ContextMenu}}" Value="{x:Null}">
-                                        <Setter Property="IsEnabled" Value="False"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </MenuItem.Style>
+                    <MenuItem Header="Rename" Click="Rename" Style="{StaticResource ResourceKey=ToggleContextMenuItemOnSelectedItem}">
                         <MenuItem.Icon>
                             <Image Source="Resources/Rename_16x.png"/>
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Header="Remove" Click="Remove">
-                        <MenuItem.Style>
-                            <Style TargetType="{x:Type MenuItem}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding PlacementTarget.SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType=ContextMenu}}" Value="{x:Null}">
-                                        <Setter Property="IsEnabled" Value="False"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </MenuItem.Style>
+                    <MenuItem Header="Remove" Click="Remove" Style="{StaticResource ResourceKey=ToggleContextMenuItemOnSelectedItem}">
                         <MenuItem.Icon>
                             <Image Source="Resources/NoResults_16x.png"/>
                         </MenuItem.Icon>
@@ -167,45 +134,18 @@
 
             <ListView.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="Add" Click="CreateMethod">
-                        <MenuItem.Style>
-                            <Style TargetType="{x:Type MenuItem}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding PlacementTarget.SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType=ContextMenu}}" Value="{x:Null}">
-                                        <Setter Property="IsEnabled" Value="False"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </MenuItem.Style>
+                    <MenuItem Header="Add" Click="CreateMethod" Style="{StaticResource ResourceKey=ToggleContextMenuItemOnSelectedItem}">
                         <MenuItem.Icon>
                             <Image Source="Resources/MethodAdded_16x.png"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     <Separator/>
-                    <MenuItem Header="Edit" Click="EditMethod">
-                        <MenuItem.Style>
-                            <Style TargetType="{x:Type MenuItem}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding PlacementTarget.SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType=ContextMenu}}" Value="{x:Null}">
-                                        <Setter Property="IsEnabled" Value="False"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </MenuItem.Style>
+                    <MenuItem Header="Edit" Click="EditMethod" Style="{StaticResource ResourceKey=ToggleContextMenuItemOnSelectedItem}">
                         <MenuItem.Icon>
                             <Image Source="Resources/MethodRenamed_16x.png"/>
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Header="Delete" Click="RemoveMethod">
-                        <MenuItem.Style>
-                            <Style TargetType="{x:Type MenuItem}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding PlacementTarget.SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType=ContextMenu}}" Value="{x:Null}">
-                                        <Setter Property="IsEnabled" Value="False"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </MenuItem.Style>
+                    <MenuItem Header="Delete" Click="RemoveMethod" Style="{StaticResource ResourceKey=ToggleContextMenuItemOnSelectedItem}">
                         <MenuItem.Icon>
                             <Image Source="Resources/MethodDeleted_16x.png"/>
                         </MenuItem.Icon>
