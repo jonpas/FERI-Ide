@@ -1,0 +1,51 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Ide.Dictionaries"
+                    xmlns:main="clr-namespace:Ide">
+    <Style x:Key="ProjectSelected" TargetType="{x:Type Control}">
+        <Setter Property="IsEnabled" Value="False"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding ElementName=ProjStruct, Path=SelectedProjectItem, Converter={StaticResource TypeOfConverter}}" Value="{x:Type main:Project}">
+                <Setter Property="IsEnabled" Value="True"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <!--TODO Use current open tab-->
+    <Style x:Key="FileItemSelected" TargetType="{x:Type Control}">
+        <Setter Property="IsEnabled" Value="False"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding ElementName=ProjStruct, Path=SelectedProjectItem, Converter={StaticResource TypeOfConverter}}" Value="{x:Type main:FileItem}">
+                <Setter Property="IsEnabled" Value="True"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="ProjectNull" TargetType="{x:Type Control}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding ElementName=ProjStruct, Path=SelectedProjectItem, Converter={StaticResource TypeOfConverter}}" Value="{x:Null}">
+                <Setter Property="IsEnabled" Value="False"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="LayoutDefault" TargetType="{x:Type MenuItem}">
+        <Setter Property="IsChecked" Value="False"/>
+        <Setter Property="IsEnabled" Value="True"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding ElementName=thisClass, Path=SelectedLayout}" Value="0">
+                <Setter Property="IsChecked" Value="True"/>
+                <Setter Property="IsEnabled" Value="False"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="LayoutMirrored" TargetType="{x:Type MenuItem}">
+        <Setter Property="IsChecked" Value="False"/>
+        <Setter Property="IsEnabled" Value="True"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding ElementName=thisClass, Path=SelectedLayout}" Value="1">
+                <Setter Property="IsChecked" Value="True"/>
+                <Setter Property="IsEnabled" Value="False"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>

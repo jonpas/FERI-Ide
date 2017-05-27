@@ -1,0 +1,29 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Ide.Dictionaries">
+    <Style x:Key="AllOptionsSelected" TargetType="{x:Type Control}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding ElementName=LanguagesList, Path=SelectedItem}" Value="{x:Null}">
+                <Setter Property="IsEnabled" Value="False"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding ElementName=TypesList, Path=SelectedItem}" Value="{x:Null}">
+                <Setter Property="IsEnabled" Value="False"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding ElementName=FrameworksList, Path=SelectedItem}" Value="{x:Null}">
+                <Setter Property="IsEnabled" Value="False"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="Spacing" TargetType="{x:Type Control}" >
+        <Setter Property="Margin" Value="5,0,5,0"/>
+    </Style>
+    
+    <Style x:Key="LanguageSelected" TargetType="{x:Type Control}" BasedOn="{StaticResource Spacing}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding ElementName=LanguagesList, Path=SelectedItem}" Value="{x:Null}">
+                <Setter Property="IsEnabled" Value="False"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>
