@@ -427,5 +427,16 @@ namespace Ide
             if (SelectedLayout != 1)
                 SelectedLayout = 1;
         }
+
+        private void Build(object sender, RoutedEventArgs e)
+        {
+            //TODO Implement properly (build options, compiler selection... etc)
+            // Only animation showcase for now
+            BuildWindow build = new BuildWindow();
+            if (build.ShowDialog() == true)
+            {
+                //MessageBox.Show("Settings", "OK", MessageBoxButton.OK);
+            }
+        }
     }
 }

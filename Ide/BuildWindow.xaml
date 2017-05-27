@@ -1,0 +1,52 @@
+﻿<Window x:Class="Ide.BuildWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Ide"
+        mc:Ignorable="d"
+        Title="BuildWindow" Height="200" Width="300">
+    <Window.Resources>
+        <PathGeometry x:Key="TopPath">
+            <PathFigure StartPoint="140, 40">
+                <ArcSegment Size="25,25" Point="139,40" SweepDirection="Clockwise" IsLargeArc="True"/>
+            </PathFigure>
+        </PathGeometry>
+        <PathGeometry x:Key="BottomPath">
+            <PathFigure StartPoint="140, 90">
+                <ArcSegment Size="25,25" Point="139,40" SweepDirection="Clockwise" IsLargeArc="True"/>
+                <ArcSegment Size="25,25" Point="139,90" SweepDirection="Clockwise" IsLargeArc="True"/>
+            </PathFigure>
+        </PathGeometry>
+    </Window.Resources>
+
+    <Grid>
+        <Canvas>
+            <Ellipse Name="Dot" Width="10" Height="10" Fill="Red" Canvas.Left="140" Canvas.Top="40">
+                <Ellipse.Triggers>
+                    <EventTrigger RoutedEvent="Ellipse.Loaded">
+                        <BeginStoryboard>
+                            <Storyboard RepeatBehavior="Forever">
+                                <DoubleAnimationUsingPath Duration="0:00:5" Source="X" Storyboard.TargetProperty="(Canvas.Left)" PathGeometry="{StaticResource TopPath}"/>
+                                <DoubleAnimationUsingPath Duration="0:00:5" Source="Y" Storyboard.TargetProperty="(Canvas.Top)" PathGeometry="{StaticResource TopPath}"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Ellipse.Triggers>
+            </Ellipse>
+            <Ellipse Name="Dot2" Width="10" Height="10" Fill="Blue" Canvas.Left="140" Canvas.Top="90">
+                <Ellipse.Triggers>
+                    <EventTrigger RoutedEvent="Ellipse.Loaded">
+                        <BeginStoryboard>
+                            <Storyboard RepeatBehavior="Forever">
+                                <DoubleAnimationUsingPath Duration="0:00:5" Source="X" Storyboard.TargetProperty="(Canvas.Left)" PathGeometry="{StaticResource BottomPath}"/>
+                                <DoubleAnimationUsingPath Duration="0:00:5" Source="Y" Storyboard.TargetProperty="(Canvas.Top)" PathGeometry="{StaticResource BottomPath}"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Ellipse.Triggers>
+            </Ellipse>
+        </Canvas>
+        <Label Name="BuildingLabel" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="25" Content="Building..."/>
+    </Grid>
+</Window>

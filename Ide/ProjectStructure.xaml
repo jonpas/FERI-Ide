@@ -10,6 +10,7 @@
     <UserControl.Resources>
         <ResourceDictionary Source="Dictionaries/ProjectStructureDictionary.xaml"/>
     </UserControl.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>

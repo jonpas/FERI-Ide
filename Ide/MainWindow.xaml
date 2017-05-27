@@ -14,6 +14,7 @@
     <Window.Resources>
         <ResourceDictionary Source="Dictionaries/MainWindowDictionary.xaml"/>
     </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -101,8 +102,7 @@
                 </MenuItem>
 
                 <MenuItem Header="Tools">
-                    <MenuItem Header="Build" Opacity="0.25">
-                        <!--TODO Implement-->
+                    <MenuItem Header="Build" Click="Build">
                         <MenuItem.Icon>
                             <Image Source="Resources/BuildSolution_16x.png"/>
                         </MenuItem.Icon>

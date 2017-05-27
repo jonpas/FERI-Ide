@@ -11,6 +11,7 @@
     <Window.Resources>
         <ResourceDictionary Source="Dictionaries/CreateProjectWindowDictionary.xaml"/>
     </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="14*"/>
