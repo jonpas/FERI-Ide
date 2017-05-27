@@ -97,7 +97,7 @@ namespace Ide
                 }
             }
 
-            // Autosave timer
+            // Start auto-save timer
             DispatcherTimer dt = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(Properties.Settings.Default.AutoSaveInterval) };
             dt.Tick += AutoSave;
             dt.Start();
@@ -105,7 +105,8 @@ namespace Ide
 
         private async void AutoSave(object sender, EventArgs e)
         {
-            Status.Content = "AutoSaved at " +  DateTime.Now.ToLongTimeString();
+            SaveState();
+            Status.Content = "Auto-Saved at " +  DateTime.Now.ToLongTimeString();
 
             // Update auto-save interval in case it changed
             ((DispatcherTimer)sender).Interval = TimeSpan.FromSeconds(Properties.Settings.Default.AutoSaveInterval);
@@ -388,7 +389,7 @@ namespace Ide
             }
         }
 
-        private void Exit(object sender, System.ComponentModel.CancelEventArgs e)
+        private void SaveState()
         {
             // Save settings
             Properties.Settings.Default.TextWrap = TextEditor.WordWrap;
@@ -402,6 +403,11 @@ namespace Ide
                 Cache cache = new Cache(ProjStruct.Projects);
                 serializer.Serialize(writer, cache);
             }
+        }
+
+        private void Exit(object sender, CancelEventArgs e)
+        {
+            SaveState();
         }
 
         private void Exit(object sender, RoutedEventArgs e)

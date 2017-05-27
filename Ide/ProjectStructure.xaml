@@ -46,30 +46,7 @@
                 <!--Files inside project directory-->
                 <DataTemplate DataType="{x:Type local:FileItem}">
                     <StackPanel Orientation="Horizontal">
-                        <Image>
-                            <Image.Style>
-                                <Style TargetType="{x:Type Image}">
-                                    <Setter Property="Source" Value="Resources/FileTypes/Document_16x.png"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Path=Extension}" Value=".cs">
-                                            <Setter Property="Source" Value="Resources/FileTypes/CS_16x.png"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Path=Extension}" Value=".xml">
-                                            <Setter Property="Source" Value="Resources/FileTypes/XMLFile_16x.png"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Path=Extension}" Value=".xaml">
-                                            <Setter Property="Source" Value="Resources/FileTypes/XMLFile_16x.png"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Path=Extension}" Value=".config">
-                                            <Setter Property="Source" Value="Resources/FileTypes/ConfigurationFile_16x.png"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Path=Extension}" Value=".png">
-                                            <Setter Property="Source" Value="Resources/FileTypes/Image_16x.png"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Image.Style>
-                        </Image>
+                        <Image Style="{StaticResource ResourceKey=FileIcon}"/>
                         <TextBlock Text="{Binding Name}"/>
                     </StackPanel>
                 </DataTemplate>
@@ -110,23 +87,7 @@
             <ListView.Resources>
                 <DataTemplate DataType="{x:Type local:Method}">
                     <StackPanel Orientation="Horizontal">
-                        <Image>
-                            <Image.Style>
-                                <Style TargetType="{x:Type Image}">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Type}" Value="private">
-                                            <Setter Property="Source" Value="Resources/FileTypes/MethodPrivate_16x.png"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Type}" Value="protected">
-                                            <Setter Property="Source" Value="Resources/FileTypes/MethodProtect_16x.png"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Type}" Value="public">
-                                            <Setter Property="Source" Value="Resources/FileTypes/Method_purple_16x.png"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Image.Style>
-                        </Image>
+                        <Image Style="{StaticResource ResourceKey=MethodIcon}"/>
                         <TextBlock Text="{Binding Signature}"/>
                     </StackPanel>
                 </DataTemplate>
