@@ -5,8 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Ide"
         mc:Ignorable="d"
-        Title="BuildWindow" Height="200" Width="300">
+        Title="Build"
+        Height="200" Width="300"
+        Icon="Resources/Logo/Logo.ico">
+    <Window.Background>
+        <SolidColorBrush x:Name="AppBack" Color="White"/>
+    </Window.Background>
+
     <Window.Resources>
+        <!--Rotating dots-->
         <PathGeometry x:Key="TopPath">
             <PathFigure StartPoint="140, 40">
                 <ArcSegment Size="25,25" Point="139,40" SweepDirection="Clockwise" IsLargeArc="True"/>
@@ -20,9 +27,20 @@
         </PathGeometry>
     </Window.Resources>
 
+    <Window.Triggers>
+        <!--Changing background-->
+        <EventTrigger RoutedEvent="Window.Loaded">
+            <BeginStoryboard>
+                <Storyboard>
+                    <ColorAnimation To="LightCyan" Duration="0:00:5" AutoReverse="True" RepeatBehavior="Forever" Storyboard.TargetName="AppBack" Storyboard.TargetProperty="Color"/>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </Window.Triggers>
+
     <Grid>
         <Canvas>
-            <Ellipse Name="Dot" Width="10" Height="10" Fill="Red" Canvas.Left="140" Canvas.Top="40">
+            <Ellipse Width="10" Height="10" Fill="Red" Canvas.Left="140" Canvas.Top="40">
                 <Ellipse.Triggers>
                     <EventTrigger RoutedEvent="Ellipse.Loaded">
                         <BeginStoryboard>
@@ -34,7 +52,7 @@
                     </EventTrigger>
                 </Ellipse.Triggers>
             </Ellipse>
-            <Ellipse Name="Dot2" Width="10" Height="10" Fill="Blue" Canvas.Left="140" Canvas.Top="90">
+            <Ellipse Width="10" Height="10" Fill="Blue" Canvas.Left="140" Canvas.Top="90">
                 <Ellipse.Triggers>
                     <EventTrigger RoutedEvent="Ellipse.Loaded">
                         <BeginStoryboard>
