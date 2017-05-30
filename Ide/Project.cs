@@ -16,8 +16,6 @@ namespace Ide
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        //TODO Add one more serializable property (task requirement)
-
         [XmlIgnore]
         public DirectoryInfo Info { get; set; }
 
@@ -33,10 +31,10 @@ namespace Ide
         }
 
         public string Language { get; set; }
-
         public string Type { get; set; }
-
         public string Framework { get; set; }
+        public string Author { get; set; }
+        public string Version { get; set; }
 
         [XmlIgnore]
         public string Location
@@ -84,25 +82,29 @@ namespace Ide
 
         private Project() { }
 
-        public Project(string path, string projectFile, string language, string type, string framework)
+        public Project(string path, string projectFile, string language, string type, string framework, string author, string version)
         {
             Info = new DirectoryInfo(path);
             ProjectFile = projectFile;
             Language = language;
             Type = type;
             Framework = framework;
+            Author = author;
+            Version = version;
 
             IgnoredItems = new List<string>();
             IgnoredItems.Add(projectFile);
         }
 
-        public Project(string path, string projectFile, string language, string type, string framework, List<string> ignoredItems)
+        public Project(string path, string projectFile, string language, string type, string framework, string author, string version, List<string> ignoredItems)
         {
             Info = new DirectoryInfo(path);
             ProjectFile = projectFile;
             Language = language;
             Type = type;
             Framework = framework;
+            Author = author;
+            Version = version;
 
             IgnoredItems = ignoredItems;
             IgnoredItems.Add(projectFile);

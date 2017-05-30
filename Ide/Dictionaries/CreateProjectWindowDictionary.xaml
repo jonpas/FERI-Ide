@@ -12,6 +12,12 @@
             <DataTrigger Binding="{Binding ElementName=FrameworksList, Path=SelectedItem}" Value="{x:Null}">
                 <Setter Property="IsEnabled" Value="False"/>
             </DataTrigger>
+            <DataTrigger Binding="{Binding ElementName=thisClass, Path=Author}" Value="">
+                <Setter Property="IsEnabled" Value="False"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding ElementName=thisClass, Path=Version}" Value="">
+                <Setter Property="IsEnabled" Value="False"/>
+            </DataTrigger>
         </Style.Triggers>
     </Style>
 

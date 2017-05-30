@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:Ide"
         xmlns:properties="clr-namespace:Ide.Properties"
         mc:Ignorable="d"
-        Title="New Project" Height="320" Width="300" ResizeMode="NoResize"
+        Name="thisClass"
+        Title="New Project" Height="375" Width="300" ResizeMode="NoResize"
         Icon="Resources/Logo/Logo.ico">
     <Window.Resources>
         <ResourceDictionary Source="Dictionaries/CreateProjectWindowDictionary.xaml"/>
@@ -23,7 +24,8 @@
                 <Label Content="Project File Location:"/>
                 <Button Content="Browse" Padding="5,0,5,0" Click="Browse"/>
             </StackPanel>
-            <TextBox Name="LocationBox" IsEnabled="False" Style="{StaticResource ResourceKey=Spacing}"/><!-- Disabled as SaveFileDialog handles .xml requirement -->
+            <!-- Disabled input as SaveFileDialog handles .xml requirement -->
+            <TextBox Text="{Binding ElementName=thisClass, Path=SelectedLocation}" IsEnabled="False" Style="{StaticResource ResourceKey=Spacing}"/>
 
             <Label Content="Language:"/>
             <ComboBox Name="LanguagesList" ItemsSource="{Binding Source={x:Static properties:Settings.Default}, Path=Languages}" SelectionChanged="SetLanguage" Style="{StaticResource ResourceKey=Spacing}"/>
@@ -33,6 +35,12 @@
 
             <Label Content="Framework:"/>
             <ComboBox Name="FrameworksList" ItemsSource="{Binding Source={x:Static properties:Settings.Default}, Path=Frameworks}" SelectionChanged="SetFramework" Style="{StaticResource ResourceKey=Spacing}"/>
+
+            <Label Content="Author:"/>
+            <TextBox Text="{Binding ElementName=thisClass, Path=Author}" Style="{StaticResource ResourceKey=Spacing}"/>
+
+            <Label Content="Version:"/>
+            <TextBox Text="{Binding ElementName=thisClass, Path=Version}" Style="{StaticResource ResourceKey=Spacing}"/>
         </StackPanel>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,5,0,5">

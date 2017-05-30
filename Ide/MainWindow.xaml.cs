@@ -128,7 +128,7 @@ namespace Ide
 
             if (newProjWin.ShowDialog() == true)
             {
-                ProjStruct.CreateProject(newProjWin.SelectedLocation, newProjWin.SelectedLanguage, newProjWin.SelectedType, newProjWin.SelectedFramework);
+                ProjStruct.CreateProject(newProjWin.SelectedLocation, newProjWin.SelectedLanguage, newProjWin.SelectedType, newProjWin.SelectedFramework, newProjWin.Author, newProjWin.Version);
             }
         }
 

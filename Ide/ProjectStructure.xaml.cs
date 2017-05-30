@@ -65,10 +65,6 @@ namespace Ide
             // Set binding sources
             ProjectTree.ItemsSource = Projects;
             MethodList.ItemsSource = Methods;
-
-            //TEST
-            //Projects.Add(new Project(Properties.Settings.Default.ProjectsDirectory, "Ide.proj.xml", "C#", "Code", "WPF"));
-            //Projects.Add(new Project(Properties.Settings.Default.ProjectsDirectory, "Project.xml", "C++", "Code", "WPF"));
         }
 
 
@@ -91,7 +87,7 @@ namespace Ide
                     {
                         Project proj = (Project)serializer.Deserialize(reader);
                         // Create new project with defined path (project file does not contain location)
-                        Projects.Add(new Project(dir, proj.ProjectFile, proj.Language, proj.Type, proj.Framework, proj.IgnoredItems));
+                        Projects.Add(new Project(dir, proj.ProjectFile, proj.Language, proj.Type, proj.Framework, proj.Author, proj.Version, proj.IgnoredItems));
                     }
                     catch
                     {
@@ -107,11 +103,11 @@ namespace Ide
             }
         }
 
-        public void CreateProject(string location, string language, string type, string framework)
+        public void CreateProject(string location, string language, string type, string framework, string author, string version)
         {
             string projectFolder = Path.GetDirectoryName(location);
             string projectFile = Path.GetFileName(location);
-            Project newProj = new Project(projectFolder, projectFile, language, type, framework);
+            Project newProj = new Project(projectFolder, projectFile, language, type, framework, author, version);
 
             XmlSerializer serializer = new XmlSerializer(typeof(Project));
             using (FileStream newProjFile = File.Create(location))

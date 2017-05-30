@@ -1,5 +1,8 @@
 ﻿using Microsoft.Win32;
+using System;
+using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -8,13 +11,46 @@ namespace Ide
     /// <summary>
     /// Interaction logic for CreateProjectWindow.xaml
     /// </summary>
-    public partial class CreateProjectWindow : Window
+    public partial class CreateProjectWindow : Window, INotifyPropertyChanged
     {
-        //TODO Add 2 additional settings (task requirement)
-        public string SelectedLocation = "";
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public string SelectedLocation
+        {
+            get { return _selectedLocation; }
+            set
+            {
+                _selectedLocation = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
+            }
+        }
+        private string _selectedLocation;
+
         public string SelectedLanguage = "";
         public string SelectedType = "";
         public string SelectedFramework = "";
+
+        public string Author
+        {
+            get { return _author; }
+            set
+            {
+                _author = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
+            }
+        }
+        private string _author;
+
+        public string Version
+        {
+            get { return _version; }
+            set
+            {
+                _version = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
+            }
+        }
+        private string _version;
 
         private string NewProjectDirectory = Properties.Settings.Default.ProjectsDirectory + @"\" + Constants.DefaultProjectDirectory;
 
@@ -22,8 +58,12 @@ namespace Ide
         {
             InitializeComponent();
 
-            Directory.CreateDirectory(NewProjectDirectory); // Temporary folder for select
-            LocationBox.Text = NewProjectDirectory;
+            // Defaults
+            SelectedLocation = NewProjectDirectory + @"\" + Constants.DefaultProjectFile;
+            Author = Environment.UserName;
+            Version = "1.0.0";
+
+            Directory.CreateDirectory(NewProjectDirectory); // (Possibly) Temporary folder for SaveFileDialog
         }
 
         private void SetLanguage(object sender, SelectionChangedEventArgs e)
@@ -59,12 +99,11 @@ namespace Ide
 
             if (dlg.ShowDialog() == true)
             {
-                LocationBox.Text = dlg.FileName;
-                SelectedLocation = LocationBox.Text;
+                SelectedLocation = dlg.FileName;
             }
 
-            // Delete temporary folder if not left selected
-            if (Path.GetDirectoryName(dlg.FileName) != NewProjectDirectory)
+            // Delete temporary folder if not left selected and is not used as a project (contains files/folders)
+            if (Path.GetDirectoryName(dlg.FileName) != NewProjectDirectory && !Directory.EnumerateFileSystemEntries(NewProjectDirectory).Any())
                 Directory.Delete(NewProjectDirectory);
         }
 
