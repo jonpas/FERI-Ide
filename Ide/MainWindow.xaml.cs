@@ -286,21 +286,11 @@ namespace Ide
 
                 // Add selected class methods to method list
                 if (selectedItem.Extension == ".cs")
-                {
                     using (var reader = new StreamReader(selectedItem.FullName, Encoding.UTF8))
-                    {
                         while (!reader.EndOfStream)
-                        {
                             foreach (Match match in regex.Matches(reader.ReadLine()))
-                            {
                                 if (match.Groups[2] != null)
-                                {
                                     ProjStruct.AddMethod(match.Groups[1].Value, match.Groups[2].Value + ")", selectedItem); // 1: type, 2: signature
-                                }
-                            }
-                        }
-                    }
-                }
             }
         }
 
@@ -311,33 +301,31 @@ namespace Ide
             if (selectedItem != null)
             {
                 string method = selectedItem.Signature;
-                FileInfo filePath = selectedItem.ContainingFile;
+                FileInfo file = selectedItem.ContainingFile;
 
-                TabItem tab = (TabItem)TextEditor.Parent;
+                string fileContent = "";
+                using (var reader = new StreamReader(file.FullName, Encoding.UTF8))
+                    fileContent = reader.ReadToEnd();
 
-                //TODO Fix showing end of the method
-                Regex regex = new Regex(method.Replace("(", @"\(").Replace(")", @"\)") + @"[^{]*.\n([^}]*)}");
+                Regex regex = new Regex(method.Replace("(", @"\(").Replace(")", @"\)"));
+                Match match = regex.Match(fileContent);
 
-                MatchCollection matches;
-                using (var reader = new StreamReader(selectedItem.ContainingFile.FullName, Encoding.UTF8))
-                    matches = regex.Matches(reader.ReadToEnd());
-
-                if (matches != null && matches.Count > 0)
+                if (match != null)
                 {
-                    //TODO Navigate to whole file
-                    TextEditor.Text = matches[0].Groups[1].Value.Replace("            ", "");
+                    // Get line number from regex match (contains index of whole string)
+                    int line = 1;
+                    for (int i = 0; i <= match.Index; i++)
+                        if (fileContent[i] == '\n')
+                            line++;
 
-                    Regex regexName = new Regex(@"(\S*)\(");
-                    MatchCollection matchesName = regexName.Matches(method);
-                    if (matchesName != null && matchesName.Count > 0)
-                        tab.Header = matchesName[0].Groups[1] + "()";
+                    // Move text editor to found line
+                    double visualTop = TextEditor.TextArea.TextView.GetVisualTopByDocumentLine(line);
+                    TextEditor.ScrollToVerticalOffset(visualTop);
                 }
                 else
                 {
-                    TextEditor.Text = "Nothing";
-                    tab.Header = "No File";
+                    //TODO Error
                 }
-                tab.FontStyle = FontStyles.Italic;
             }
         }
 
