@@ -8,7 +8,7 @@
         <converters:InvertBoolConverter x:Key="InvertBoolConverter"/>
         <converters:TypeOfConverter x:Key="TypeOfConverter"/>
 
-        <Style x:Key="EnableDisableImageStyle" TargetType="{x:Type Image}">
+        <Style x:Key="EnableDisableImage" TargetType="{x:Type Image}">
             <Style.Triggers>
                 <Trigger Property="IsEnabled" Value="False">
                     <Setter Property="Opacity" Value="0.25"/>

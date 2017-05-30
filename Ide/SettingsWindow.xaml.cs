@@ -11,22 +11,34 @@ namespace Ide
     /// </summary>
     public partial class SettingsWindow : Window
     {
-        Dictionary<string, List<string>> languageTypes;
+        Dictionary<string, List<string>> LanguageTypes;
 
         public SettingsWindow()
         {
             InitializeComponent();
 
             // Prepare language<->types map
-            languageTypes = new Dictionary<string, List<string>>();
+            LanguageTypes = new Dictionary<string, List<string>>();
 
             // Load settings
             var languages = Properties.Settings.Default.Languages;
             if (languages != null)
             {
                 foreach (var language in languages)
-                {
                     AddItem(LanguagesList, language);
+            }
+            else
+            {
+                // Add default languages
+                if (AddItem(LanguagesList, "C++"))
+                {
+                    LanguageTypes["C++"].Add("Empty");
+                    LanguageTypes["C++"].Add("Console");
+                }
+                if (AddItem(LanguagesList, "C#"))
+                {
+                    LanguageTypes["C#"].Add("Empty");
+                    LanguageTypes["C#"].Add("WPF");
                 }
             }
 
@@ -34,18 +46,21 @@ namespace Ide
             if (types != null)
             {
                 for (var i = 0; i < types.Count(); i++)
-                {
-                    languageTypes[languages[i]] = types[i];
-                }
+                    LanguageTypes[languages[i]] = types[i];
             }
 
             var frameworks = Properties.Settings.Default.Frameworks;
             if (frameworks != null)
             {
                 foreach (var item in frameworks)
-                {
                     AddItem(FrameworksList, item);
-                }
+            }
+            else
+            {
+                // Add default frameworks
+                AddItem(FrameworksList, "QT");
+                AddItem(FrameworksList, "SDL2");
+                AddItem(FrameworksList, ".NET");
             }
         }
 
@@ -61,18 +76,20 @@ namespace Ide
             }
         }
 
-        private void AddItem(ListView list, string text)
+        private bool AddItem(ListView list, string text)
         {
-            if (!languageTypes.ContainsKey(text))
+            if (!LanguageTypes.ContainsKey(text))
             {
                 ListViewItem item = new ListViewItem();
                 item.Content = text;
                 list.Items.Add(item);
-                languageTypes.Add(text, new List<string>());
+                LanguageTypes.Add(text, new List<string>());
+                return true;
             }
             else
             {
                 //TODO Notify type already exists
+                return false;
             }
         }
 
@@ -93,13 +110,13 @@ namespace Ide
                     string selectedLangauge = (string)((ListViewItem)LanguagesList.SelectedItem).Content;
 
                     var types = new List<string>();
-                    if (languageTypes.TryGetValue(selectedLangauge, out types))
+                    if (LanguageTypes.TryGetValue(selectedLangauge, out types))
                     {
                         if (!types.Contains(text))
                         {
                             //TODO Don't save types list on Cancel
                             types.Add(text);
-                            languageTypes[selectedLangauge] = types;
+                            LanguageTypes[selectedLangauge] = types;
                             ListTypes();
                         }
                         else
@@ -149,7 +166,7 @@ namespace Ide
                 string selectedLangauge = (string)selectedLanguageItem.Content;
 
                 List<string> types;
-                if (languageTypes.TryGetValue(selectedLangauge, out types))
+                if (LanguageTypes.TryGetValue(selectedLangauge, out types))
                 {
                     foreach (var type in types)
                     {
@@ -176,7 +193,7 @@ namespace Ide
             foreach (var item in languages)
             {
                 var itemTypes = new List<string>();
-                languageTypes.TryGetValue(item, out itemTypes);
+                LanguageTypes.TryGetValue(item, out itemTypes);
                 types.Add(itemTypes);
             }
             Properties.Settings.Default.Types = types;

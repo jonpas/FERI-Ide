@@ -62,7 +62,9 @@ namespace Ide
                 Properties.Settings.Default.ProjectsDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\" + Constants.ProjectsFolder;
 
             if (!Directory.Exists(Properties.Settings.Default.ProjectsDirectory))
+            {
                 Directory.CreateDirectory(Properties.Settings.Default.ProjectsDirectory);
+            }
 
             // Load settings
             TextEditor.WordWrap = Properties.Settings.Default.TextWrap;

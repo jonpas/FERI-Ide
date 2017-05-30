@@ -40,12 +40,12 @@
                     </MenuItem>
                     <MenuItem Header="Open Project" Click="OpenProject">
                         <MenuItem.Icon>
-                            <Image Source="Resources/OpenFileFromProject_16x.png" Style="{StaticResource EnableDisableImageStyle}"/>
+                            <Image Source="Resources/OpenFileFromProject_16x.png" Style="{StaticResource EnableDisableImage}"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Header="Close Project" Click="CloseProject" Style="{StaticResource ResourceKey=ProjectSelected}">
                         <MenuItem.Icon>
-                            <Image Source="Resources/DeleteFolder_16x.png" Style="{StaticResource EnableDisableImageStyle}"/>
+                            <Image Source="Resources/DeleteFolder_16x.png" Style="{StaticResource EnableDisableImage}"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     <Separator/>
@@ -56,12 +56,12 @@
                     </MenuItem>
                     <MenuItem Header="{Binding ElementName=ProjStruct, Path=SelectedProjectValue.Name}" HeaderStringFormat="Save {0}" Click="SaveFile" Style="{StaticResource ResourceKey=FileItemSelected}">
                         <MenuItem.Icon>
-                            <Image Source="Resources/Save_16x.png" Style="{StaticResource EnableDisableImageStyle}"/>
+                            <Image Source="Resources/Save_16x.png" Style="{StaticResource EnableDisableImage}"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Header="{Binding ElementName=ProjStruct, Path=SelectedProjectValue.Name}" HeaderStringFormat="Save {0} As..." Click="SaveFileAs" Style="{StaticResource ResourceKey=FileItemSelected}">
                         <MenuItem.Icon>
-                            <Image Source="Resources/SaveAs_16x.png" Style="{StaticResource EnableDisableImageStyle}"/>
+                            <Image Source="Resources/SaveAs_16x.png" Style="{StaticResource EnableDisableImage}"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Header="Save All">
@@ -121,16 +121,16 @@
             <ToolBarTray>
                 <ToolBar>
                     <Button Click="CreateFileFolder" Style="{StaticResource ResourceKey=ProjectNull}">
-                        <Image Source="Resources/NewFile_16x.png" ToolTip="New File" Style="{StaticResource EnableDisableImageStyle}"/>
+                        <Image Source="Resources/NewFile_16x.png" ToolTip="New File" Style="{StaticResource EnableDisableImage}"/>
                     </Button>
                     <Button Click="CreateFileFolder" Tag="Folder" Style="{StaticResource ResourceKey=ProjectNull}">
-                        <Image Source="Resources/NewSolutionFolder_16x.png" ToolTip="New Folder" Style="{StaticResource EnableDisableImageStyle}"/>
+                        <Image Source="Resources/NewSolutionFolder_16x.png" ToolTip="New Folder" Style="{StaticResource EnableDisableImage}"/>
                     </Button>
                     <Button Click="RenameFileFolderProject" Style="{StaticResource ResourceKey=ProjectNull}">
-                        <Image Source="Resources/Rename_16x.png" ToolTip="Rename Item" Style="{StaticResource EnableDisableImageStyle}"/>
+                        <Image Source="Resources/Rename_16x.png" ToolTip="Rename Item" Style="{StaticResource EnableDisableImage}"/>
                     </Button>
                     <Button Click="DeleteFileFolder" Style="{StaticResource ResourceKey=FileFolderItemSelected}">
-                        <Image Source="Resources/NoResults_16x.png" ToolTip="Remove Item" Style="{StaticResource EnableDisableImageStyle}"/>
+                        <Image Source="Resources/NoResults_16x.png" ToolTip="Remove Item" Style="{StaticResource EnableDisableImage}"/>
                     </Button>
                 </ToolBar>
                 <ToolBar>
@@ -138,7 +138,7 @@
                         <Image Source="Resources/OpenFolder_16x.png" ToolTip="Open File"/>
                     </Button>
                     <Button Click="SaveFile" Style="{StaticResource ResourceKey=FileItemSelected}">
-                        <Image Source="Resources/Save_16x.png" Style="{StaticResource EnableDisableImageStyle}">
+                        <Image Source="Resources/Save_16x.png" Style="{StaticResource EnableDisableImage}">
                             <Image.ToolTip>
                                 <ToolTip Content="{Binding ElementName=ProjStruct, Path=SelectedProjectValue.Name}" ContentStringFormat="Save {0}"/>
                                 <!--TODO Use current open tab-->

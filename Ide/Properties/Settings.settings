@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="Frameworks" Type="System.Collections.Generic.List&lt;System.String&gt;" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">["CPP", "CS"]</Value>
     </Setting>
     <Setting Name="Languages" Type="System.Collections.Generic.List&lt;System.String&gt;" Scope="User">
       <Value Profile="(Default)" />
