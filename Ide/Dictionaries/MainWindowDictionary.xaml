@@ -1,11 +1,10 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:Ide.Dictionaries"
-                    xmlns:main="clr-namespace:Ide">
+                    xmlns:local="clr-namespace:Ide">
     <Style x:Key="ProjectSelected" TargetType="{x:Type Control}">
         <Setter Property="IsEnabled" Value="False"/>
         <Style.Triggers>
-            <DataTrigger Binding="{Binding ElementName=ProjStruct, Path=SelectedProjectItem, Converter={StaticResource TypeOfConverter}}" Value="{x:Type main:Project}">
+            <DataTrigger Binding="{Binding ElementName=ProjStruct, Path=SelectedProjectItem, Converter={StaticResource TypeOfConverter}}" Value="{x:Type local:Project}">
                 <Setter Property="IsEnabled" Value="True"/>
             </DataTrigger>
         </Style.Triggers>
@@ -14,7 +13,19 @@
     <Style x:Key="FileItemSelected" TargetType="{x:Type Control}">
         <Setter Property="IsEnabled" Value="False"/>
         <Style.Triggers>
-            <DataTrigger Binding="{Binding ElementName=ProjStruct, Path=SelectedProjectItem, Converter={StaticResource TypeOfConverter}}" Value="{x:Type main:FileItem}">
+            <DataTrigger Binding="{Binding ElementName=ProjStruct, Path=SelectedProjectItem, Converter={StaticResource TypeOfConverter}}" Value="{x:Type local:FileItem}">
+                <Setter Property="IsEnabled" Value="True"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="FileFolderItemSelected" TargetType="{x:Type Control}">
+        <Setter Property="IsEnabled" Value="False"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding ElementName=ProjStruct, Path=SelectedProjectItem, Converter={StaticResource TypeOfConverter}}" Value="{x:Type local:FileItem}">
+                <Setter Property="IsEnabled" Value="True"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding ElementName=ProjStruct, Path=SelectedProjectItem, Converter={StaticResource TypeOfConverter}}" Value="{x:Type local:FolderItem}">
                 <Setter Property="IsEnabled" Value="True"/>
             </DataTrigger>
         </Style.Triggers>

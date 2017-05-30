@@ -129,20 +129,7 @@
                     <Button Click="RenameFileFolderProject" Style="{StaticResource ResourceKey=ProjectNull}">
                         <Image Source="Resources/Rename_16x.png" ToolTip="Rename Item" Style="{StaticResource EnableDisableImageStyle}"/>
                     </Button>
-                    <Button Click="DeleteFileFolder">
-                        <Button.Style>
-                            <Style TargetType="{x:Type Button}">
-                                <Setter Property="IsEnabled" Value="False"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ElementName=ProjStruct, Path=SelectedProjectItem, Converter={StaticResource TypeOfConverter}}" Value="{x:Type local:FileItem}">
-                                        <Setter Property="IsEnabled" Value="True"/>
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding ElementName=ProjStruct, Path=SelectedProjectItem, Converter={StaticResource TypeOfConverter}}" Value="{x:Type local:FolderItem}">
-                                        <Setter Property="IsEnabled" Value="True"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
+                    <Button Click="DeleteFileFolder" Style="{StaticResource ResourceKey=FileFolderItemSelected}">
                         <Image Source="Resources/NoResults_16x.png" ToolTip="Remove Item" Style="{StaticResource EnableDisableImageStyle}"/>
                     </Button>
                 </ToolBar>

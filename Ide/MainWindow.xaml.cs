@@ -59,7 +59,7 @@ namespace Ide
             // Create default projects directory if it doesn't exist yet
             string projectDir = Properties.Settings.Default.ProjectsDirectory;
             if (projectDir == "")
-                Properties.Settings.Default.ProjectsDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/" + Constants.ProjectsFolder;
+                Properties.Settings.Default.ProjectsDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\" + Constants.ProjectsFolder;
 
             if (!Directory.Exists(Properties.Settings.Default.ProjectsDirectory))
                 Directory.CreateDirectory(Properties.Settings.Default.ProjectsDirectory);

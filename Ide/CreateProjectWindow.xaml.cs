@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -15,11 +16,14 @@ namespace Ide
         public string SelectedType = "";
         public string SelectedFramework = "";
 
+        private string NewProjectDirectory = Properties.Settings.Default.ProjectsDirectory + @"\" + Constants.DefaultProjectDirectory;
+
         public CreateProjectWindow()
         {
             InitializeComponent();
 
-            LocationBox.Text = Properties.Settings.Default.ProjectsDirectory + @"\" + Constants.DefaultProjectFile;
+            Directory.CreateDirectory(NewProjectDirectory); // Temporary folder for select
+            LocationBox.Text = NewProjectDirectory;
         }
 
         private void SetLanguage(object sender, SelectionChangedEventArgs e)
@@ -31,9 +35,7 @@ namespace Ide
             int selectedLangaugeIndex = languagesList.SelectedIndex;
 
             foreach (var type in Properties.Settings.Default.Types[selectedLangaugeIndex])
-            {
                 TypesList.Items.Add(type);
-            }
         }
 
         private void SetType(object sender, SelectionChangedEventArgs e)
@@ -51,13 +53,18 @@ namespace Ide
         private void Browse(object sender, RoutedEventArgs e)
         {
             SaveFileDialog dlg = new SaveFileDialog();
-            dlg.InitialDirectory = Properties.Settings.Default.ProjectsDirectory;
+            dlg.InitialDirectory = NewProjectDirectory;
+            dlg.FileName = Constants.DefaultProjectFile;
             dlg.Filter = "Text documents (.xml)|*.xml"; // Filter files by extension
 
             if (dlg.ShowDialog() == true)
             {
                 LocationBox.Text = dlg.FileName;
                 SelectedLocation = LocationBox.Text;
+
+                // Delete temporary folder if not left selected
+                if (Path.GetDirectoryName(dlg.FileName) != NewProjectDirectory)
+                    Directory.Delete(NewProjectDirectory);
             }
         }
 

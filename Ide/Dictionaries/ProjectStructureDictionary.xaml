@@ -9,6 +9,18 @@
         </Style.Triggers>
     </Style>
 
+    <Style x:Key="ToggleContextMenuItemOnSelectedFileFolderItem" TargetType="{x:Type Control}">
+        <Setter Property="IsEnabled" Value="False"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding PlacementTarget.SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType=ContextMenu}, Converter={StaticResource TypeOfConverter}}" Value="{x:Type local:FileItem}">
+                <Setter Property="IsEnabled" Value="True"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding PlacementTarget.SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType=ContextMenu}, Converter={StaticResource TypeOfConverter}}" Value="{x:Type local:FolderItem}">
+                <Setter Property="IsEnabled" Value="True"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
     <Style x:Key="FileIcon" TargetType="{x:Type Image}">
         <Setter Property="Source" Value="../Resources/FileTypes/Document_16x.png"/>
         <Style.Triggers>

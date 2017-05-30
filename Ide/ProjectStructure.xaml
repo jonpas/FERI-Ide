@@ -71,7 +71,7 @@
                             <Image Source="Resources/Rename_16x.png"/>
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Header="Remove" Click="Remove" Style="{StaticResource ResourceKey=ToggleContextMenuItemOnSelectedItem}">
+                    <MenuItem Header="Remove" Click="Remove" Style="{StaticResource ResourceKey=ToggleContextMenuItemOnSelectedFileFolderItem}">
                         <MenuItem.Icon>
                             <Image Source="Resources/NoResults_16x.png"/>
                         </MenuItem.Icon>

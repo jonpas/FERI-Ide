@@ -2,13 +2,13 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Ide.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="Frameworks" Type="System.Collections.Generic.List&lt;string&gt;" Scope="User">
+    <Setting Name="Frameworks" Type="System.Collections.Generic.List&lt;System.String&gt;" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="Languages" Type="System.Collections.Generic.List&lt;string&gt;" Scope="User">
+    <Setting Name="Languages" Type="System.Collections.Generic.List&lt;System.String&gt;" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="Types" Type="System.Collections.Generic.List&lt;System.Collections.Generic.List&lt;string&gt;&gt;" Scope="User">
+    <Setting Name="Types" Type="System.Collections.Generic.List&lt;System.Collections.Generic.List&lt;System.String&gt;&gt;" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="TextWrap" Type="System.Boolean" Scope="User">

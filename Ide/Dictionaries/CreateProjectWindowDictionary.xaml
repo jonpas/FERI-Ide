@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:Ide.Dictionaries">
+                    xmlns:local="clr-namespace:Ide">
     <Style x:Key="AllOptionsSelected" TargetType="{x:Type Control}">
         <Style.Triggers>
             <DataTrigger Binding="{Binding ElementName=LanguagesList, Path=SelectedItem}" Value="{x:Null}">
