@@ -56,14 +56,24 @@ namespace Ide
         {
             InitializeComponent();
 
-            // Create default projects directory if it doesn't exist yet
+            // Create default projects directory if it doesn't exist (yet or was deleted)
             string projectDir = Properties.Settings.Default.ProjectsDirectory;
             if (projectDir == "")
                 Properties.Settings.Default.ProjectsDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\" + Constants.ProjectsFolder;
 
             if (!Directory.Exists(Properties.Settings.Default.ProjectsDirectory))
-            {
                 Directory.CreateDirectory(Properties.Settings.Default.ProjectsDirectory);
+
+            // Add default settings in case of first run
+            if (Properties.Settings.Default.FirstRun)
+            {
+                // Default languages, types and frameworks
+                Properties.Settings.Default.Languages = new List<string>() { "C++", "C#" };
+                Properties.Settings.Default.Types = new List<List<string>>() { new List<string>() { "Empty", "Console" }, new List<string>() { "Empty", "WPF" } };
+                Properties.Settings.Default.Frameworks = new List<string>() { "QT", "SDL2", ".NET" };
+
+                // Mark first run completed
+                Properties.Settings.Default.FirstRun = false;
             }
 
             // Load settings
@@ -102,7 +112,7 @@ namespace Ide
         private async void AutoSave(object sender, EventArgs e)
         {
             SaveState();
-            Status.Content = "Auto-Saved at " +  DateTime.Now.ToLongTimeString();
+            Status.Content = "Auto-Saved at " + DateTime.Now.ToLongTimeString();
 
             // Update auto-save interval in case it changed
             ((DispatcherTimer)sender).Interval = TimeSpan.FromSeconds(Properties.Settings.Default.AutoSaveInterval);

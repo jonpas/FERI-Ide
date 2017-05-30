@@ -27,20 +27,6 @@ namespace Ide
                 foreach (var language in languages)
                     AddItem(LanguagesList, language);
             }
-            else
-            {
-                // Add default languages
-                if (AddItem(LanguagesList, "C++"))
-                {
-                    LanguageTypes["C++"].Add("Empty");
-                    LanguageTypes["C++"].Add("Console");
-                }
-                if (AddItem(LanguagesList, "C#"))
-                {
-                    LanguageTypes["C#"].Add("Empty");
-                    LanguageTypes["C#"].Add("WPF");
-                }
-            }
 
             var types = Properties.Settings.Default.Types;
             if (types != null)
@@ -54,13 +40,6 @@ namespace Ide
             {
                 foreach (var item in frameworks)
                     AddItem(FrameworksList, item);
-            }
-            else
-            {
-                // Add default frameworks
-                AddItem(FrameworksList, "QT");
-                AddItem(FrameworksList, "SDL2");
-                AddItem(FrameworksList, ".NET");
             }
         }
 
@@ -76,7 +55,7 @@ namespace Ide
             }
         }
 
-        private bool AddItem(ListView list, string text)
+        private void AddItem(ListView list, string text)
         {
             if (!LanguageTypes.ContainsKey(text))
             {
@@ -84,12 +63,10 @@ namespace Ide
                 item.Content = text;
                 list.Items.Add(item);
                 LanguageTypes.Add(text, new List<string>());
-                return true;
             }
             else
             {
                 //TODO Notify type already exists
-                return false;
             }
         }
 

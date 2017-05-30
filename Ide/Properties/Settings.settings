@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="Frameworks" Type="System.Collections.Generic.List&lt;System.String&gt;" Scope="User">
-      <Value Profile="(Default)">["CPP", "CS"]</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="Languages" Type="System.Collections.Generic.List&lt;System.String&gt;" Scope="User">
       <Value Profile="(Default)" />
@@ -22,6 +22,9 @@
     </Setting>
     <Setting Name="AutoSaveInterval" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="FirstRun" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

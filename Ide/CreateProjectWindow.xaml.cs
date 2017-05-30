@@ -61,11 +61,11 @@ namespace Ide
             {
                 LocationBox.Text = dlg.FileName;
                 SelectedLocation = LocationBox.Text;
-
-                // Delete temporary folder if not left selected
-                if (Path.GetDirectoryName(dlg.FileName) != NewProjectDirectory)
-                    Directory.Delete(NewProjectDirectory);
             }
+
+            // Delete temporary folder if not left selected
+            if (Path.GetDirectoryName(dlg.FileName) != NewProjectDirectory)
+                Directory.Delete(NewProjectDirectory);
         }
 
         private void Confirm(object sender, RoutedEventArgs e)
