@@ -9,14 +9,12 @@ namespace Ide.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            bool booleanValue = (bool)value;
-            return !booleanValue;
+            return !(bool)value;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            bool booleanValue = (bool)value;
-            return !booleanValue;
+            return !(bool)value;
         }
     }
 }
