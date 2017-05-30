@@ -292,6 +292,8 @@ namespace Ide
                 {
                     using (var reader = new StreamReader(selectedItem.FullName, Encoding.UTF8))
                         TextEditor.Text = reader.ReadToEnd();
+                    TextEditor.TextArea.TextView.GetVisualTopByDocumentLine(1); // Set to first line (method selection moves line)
+
                     tab.Header = selectedItem.Name;
                     tab.FontStyle = FontStyles.Normal;
                 }
@@ -324,7 +326,7 @@ namespace Ide
 
                 if (match != null)
                 {
-                    // Get line number from regex match (contains index of whole string)
+                    // Get line number from regex match (contains index of whole string) - Adapted from: https://stackoverflow.com/a/8497861
                     int line = 1;
                     for (int i = 0; i <= match.Index; i++)
                         if (fileContent[i] == '\n')

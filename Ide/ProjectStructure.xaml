@@ -96,6 +96,7 @@
 
             <ListView.ContextMenu>
                 <ContextMenu>
+                    <!--TODO Implement in-file edit for creating, editing and removing methods-->
                     <MenuItem Header="Add" Click="CreateMethod" Style="{StaticResource ResourceKey=ToggleContextMenuItemOnSelectedItem}">
                         <MenuItem.Icon>
                             <Image Source="Resources/MethodAdded_16x.png"/>
