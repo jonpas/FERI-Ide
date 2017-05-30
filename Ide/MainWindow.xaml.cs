@@ -19,11 +19,7 @@ namespace Ide
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        //TODO Move more things to ProjectStructure UserControl
-
         public event PropertyChangedEventHandler PropertyChanged;
-
-        public string Test = "sdgagasg";
 
         public int SelectedLayout
         {
@@ -58,7 +54,6 @@ namespace Ide
 
         public MainWindow()
         {
-            //TODO Encode files in UTF-8 without BOM (writing and reading)
             InitializeComponent();
 
             // Create default projects directory if it doesn't exist yet
@@ -283,7 +278,7 @@ namespace Ide
                 // Show file contents
                 if (tab != null)
                 {
-                    using (var reader = new StreamReader(selectedItem.FullName, Encoding.Unicode))
+                    using (var reader = new StreamReader(selectedItem.FullName, Encoding.UTF8))
                         TextEditor.Text = reader.ReadToEnd();
                     tab.Header = selectedItem.Name;
                     tab.FontStyle = FontStyles.Normal;
@@ -292,7 +287,7 @@ namespace Ide
                 // Add selected class methods to method list
                 if (selectedItem.Extension == ".cs")
                 {
-                    using (var reader = new StreamReader(selectedItem.FullName, Encoding.Unicode))
+                    using (var reader = new StreamReader(selectedItem.FullName, Encoding.UTF8))
                     {
                         while (!reader.EndOfStream)
                         {
@@ -324,7 +319,7 @@ namespace Ide
                 Regex regex = new Regex(method.Replace("(", @"\(").Replace(")", @"\)") + @"[^{]*.\n([^}]*)}");
 
                 MatchCollection matches;
-                using (var reader = new StreamReader(selectedItem.ContainingFile.FullName, Encoding.Unicode))
+                using (var reader = new StreamReader(selectedItem.ContainingFile.FullName, Encoding.UTF8))
                     matches = regex.Matches(reader.ReadToEnd());
 
                 if (matches != null && matches.Count > 0)
@@ -355,7 +350,7 @@ namespace Ide
             if (dlg.ShowDialog() == true)
             {
                 TabItem tab = (TabItem)TextEditor.Parent;
-                TextEditor.Text = File.ReadAllText(dlg.FileName);
+                TextEditor.Text = File.ReadAllText(dlg.FileName, Encoding.UTF8);
                 tab.Header = Path.GetFileName(dlg.FileName);
                 tab.FontStyle = FontStyles.Italic;
             }
@@ -364,7 +359,7 @@ namespace Ide
         private void SaveFile(object sender, RoutedEventArgs e)
         {
             FileItem selectedItem = (FileItem)ProjStruct.ProjectTree.SelectedItem;
-            File.WriteAllText(selectedItem.Location, TextEditor.Text);
+            File.WriteAllText(selectedItem.Location, TextEditor.Text, Encoding.UTF8);
         }
 
         private void SaveFileAs(object sender, RoutedEventArgs e)
@@ -375,7 +370,7 @@ namespace Ide
 
             if (dlg.ShowDialog() == true)
             {
-                File.WriteAllText(dlg.FileName, TextEditor.Text);
+                File.WriteAllText(dlg.FileName, TextEditor.Text, Encoding.UTF8);
             }
         }
 

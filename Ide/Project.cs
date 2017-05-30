@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows.Data;
 using System.Xml.Serialization;
 
@@ -110,7 +111,7 @@ namespace Ide
         public void AddFile(string fileName)
         {
             string path = Location + "/" + fileName;
-            File.WriteAllText(path, "/* Default text */");
+            File.WriteAllText(path, "/* Default text */", Encoding.UTF8);
             FilesCollection.Add(new FileItem(path, FilesCollection, this, null));
         }
 

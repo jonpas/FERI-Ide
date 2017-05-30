@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
+using System.Text;
 using System.Windows.Data;
 
 namespace Ide
@@ -91,7 +92,7 @@ namespace Ide
         public void AddFile(string fileName)
         {
             string path = Location + "/" + fileName;
-            File.WriteAllText(path, "/* Default text */");
+            File.WriteAllText(path, "/* Default text */", Encoding.UTF8);
             FilesCollection.Add(new FileItem(path, FilesCollection, ContainingProject, null));
         }
 
